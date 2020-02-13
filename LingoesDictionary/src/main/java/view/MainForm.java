@@ -34,6 +34,7 @@ public class MainForm extends javax.swing.JFrame {
     private final Container container = getContentPane();
     private final String ICON_PATH = "F:\\Java Project\\LingoesDictionary\\target\\classes\\pictures\\icon-lingoes-16px.jpg";
     private final JSplitPane splitPane = new JSplitPane();
+    private final String pathToDicData = getClass().getResource("/documents/Dictionary.txt").toString();
 
     private PanelLeft pnLeft;
     private PanelCenter pnCenter;
