@@ -104,7 +104,7 @@ public class PanelLeft extends javax.swing.JPanel {
         pnLeftLeft.setBackground(new java.awt.Color(204, 204, 255));
         pnLeftLeft.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 1, new java.awt.Color(153, 153, 153)));
 
-        btHomepage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pictures/icon-index-16px.png"))); // NOI18N
+        btHomepage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pictures/icon-homepage-16px.png"))); // NOI18N
         btHomepage.setBorder(null);
         btHomepage.setContentAreaFilled(false);
 
