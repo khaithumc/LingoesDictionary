@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JSplitPane;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
@@ -26,12 +27,17 @@ public class PanelLeft extends javax.swing.JPanel {
     private HomepagePanel homepagePanel;
     private SettingPanel settingPanel;
     private AddendumPanel addendumPanel;
+    private JSplitPane splitPane;
     
     private final Border defaultBorder = new JButton().getBorder();
     private final Border pnLeftButtonHighLightBorder = BorderFactory
             .createCompoundBorder(new LineBorder(new Color(153,153,153), 1), new LineBorder(Color.WHITE, 5));
+    private final String homepageKey = getClass().getResource("/pictures/icon-homepage-16px.png").toString();
     
-    public PanelLeft() {
+    public PanelLeft(JSplitPane splitPane) {
+        this.splitPane = splitPane;
+        this.splitPane.setEnabled(false);
+        
         initComponents();
         initComponentManuallys();
         initEvents();
@@ -40,7 +46,7 @@ public class PanelLeft extends javax.swing.JPanel {
     private void initComponentManuallys() {
         pnLeftCenter.setLayout(cardLayout);
         
-        homepagePanel = new HomepagePanel();
+        homepagePanel = new HomepagePanel(splitPane);
         settingPanel = new SettingPanel();
         addendumPanel = new AddendumPanel();
         
@@ -69,6 +75,12 @@ public class PanelLeft extends javax.swing.JPanel {
                         
                         disableHighLightButtons(components);
                         button.setBorder(pnLeftButtonHighLightBorder);
+                        
+                        if(key.equals(homepageKey)){
+                            splitPane.setEnabled(false);
+                        } else {
+                            splitPane.setEnabled(true);
+                        }
                     }
                 });
             }

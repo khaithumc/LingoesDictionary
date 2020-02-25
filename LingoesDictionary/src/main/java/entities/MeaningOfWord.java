@@ -73,15 +73,9 @@ public class MeaningOfWord {
     @Override
     public String toString() {
         StringBuilder tmp = new StringBuilder();
-        tmp.append("Nghĩa: ").append(this.meaning);
-        
-        examples.forEach((example) -> {
-            tmp.append("\n").append("Ví dụ: ").append(example);
-        });
-        
-        attachedPrepositions.forEach((ap) -> {
-            tmp.append("\n").append("Giới từ đi kèm: ").append(ap);
-        });
+        tmp.append("<p style=\"font-size:16px;font-family:tahoma\">&emsp;- ").append(this.meaning).append("</p>");
+        examples.forEach((example) -> tmp.append("<p style=\"font-size:16px;font-family:tahoma\">&emsp;&emsp;&emsp;ex: ").append(example).append("</p>"));
+        attachedPrepositions.forEach((ap) -> tmp.append("<p style=\"font-size:16px;font-family:tahoma\">&emsp;&emsp;&emsp;Giới từ đi kèm: ").append(ap).append("</p>"));
         
         return tmp.toString();
     }

@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
+import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 
 /**
@@ -61,6 +62,10 @@ public class PanelCenter extends javax.swing.JPanel {
         }
     }
 
+    public JScrollPane getScpCenterCenter(){
+        return this.scpCenterCenter;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -78,7 +83,7 @@ public class PanelCenter extends javax.swing.JPanel {
         btFind = new javax.swing.JButton();
         btTranslate = new javax.swing.JButton();
         btHomepage = new javax.swing.JButton();
-        pnCenterCenter = new javax.swing.JPanel();
+        scpCenterCenter = new javax.swing.JScrollPane();
 
         setBackground(new java.awt.Color(253, 247, 250));
         setLayout(new java.awt.BorderLayout());
@@ -150,21 +155,7 @@ public class PanelCenter extends javax.swing.JPanel {
         );
 
         add(pnCenterTop, java.awt.BorderLayout.PAGE_START);
-
-        pnCenterCenter.setBackground(new java.awt.Color(253, 247, 250));
-
-        javax.swing.GroupLayout pnCenterCenterLayout = new javax.swing.GroupLayout(pnCenterCenter);
-        pnCenterCenter.setLayout(pnCenterCenterLayout);
-        pnCenterCenterLayout.setHorizontalGroup(
-            pnCenterCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 619, Short.MAX_VALUE)
-        );
-        pnCenterCenterLayout.setVerticalGroup(
-            pnCenterCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 264, Short.MAX_VALUE)
-        );
-
-        add(pnCenterCenter, java.awt.BorderLayout.CENTER);
+        add(scpCenterCenter, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
@@ -176,7 +167,7 @@ public class PanelCenter extends javax.swing.JPanel {
     private javax.swing.JButton btSave;
     private javax.swing.JButton btSpeaker;
     private javax.swing.JButton btTranslate;
-    private javax.swing.JPanel pnCenterCenter;
     private javax.swing.JPanel pnCenterTop;
+    private javax.swing.JScrollPane scpCenterCenter;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,7 +5,22 @@
  */
 package view.sub;
 
-import javax.swing.JScrollBar;
+import dao.WordDao;
+import dao.WordDaoImpl;
+import entities.Word;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.List;
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import utils.SizeUtils;
 
 /**
  *
@@ -13,13 +28,36 @@ import javax.swing.JScrollBar;
  */
 public class HomepagePanel extends javax.swing.JPanel {
 
+    private JSplitPane splitPane;
+    private List<Word> words;
+    private final String pathToDataFile = getClass().getResource("/documents/Dictionary.txt").getFile();
+    private final int maximumWordLength = 200;
+    private final Font wordFont = new Font("Tahoma", Font.PLAIN, 16);
     
-    public HomepagePanel() {
+    public HomepagePanel(JSplitPane splitPane) {
+        this.splitPane = splitPane;
+        
+        WordDao wdao = new WordDaoImpl();
+        File file = new File(pathToDataFile);
+        words = wdao.getWords(file);
+        
         initComponents();
         initComponentManuallys();
     }
     
     private void initComponentManuallys() {
+        JLabel tmpLabel = new JLabel("Word");
+        int height = (tmpLabel.getPreferredSize().height + 5) * words.size();
+        pnWords.setPreferredSize(new Dimension(pnWords.getPreferredSize().width, height));
+        
+        for(int i = 0; i < words.size(); i++){
+            Word word = words.get(i);
+            JLabel lbWord = new JLabel(word.getVocabulary());
+            lbWord.setPreferredSize(new Dimension(maximumWordLength, lbWord.getPreferredSize().height));
+            pnWords.add(lbWord);
+            
+            setEventLbWord(lbWord, word);
+        }
     }
 
     /**
@@ -31,38 +69,58 @@ public class HomepagePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jScrollBar1 = new javax.swing.JScrollBar();
+        scpWords = new javax.swing.JScrollPane();
+        pnWords = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setText("TỪ ĐIỂN");
-
-        jScrollBar1.setBackground(new java.awt.Color(204, 204, 204));
+        pnWords.setMinimumSize(new java.awt.Dimension(100, 100));
+        scpWords.setViewportView(pnWords);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(161, 161, 161)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
-                .addComponent(jScrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(scpWords, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jLabel1)
-                .addGap(25, 259, Short.MAX_VALUE))
-            .addComponent(jScrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scpWords)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollBar jScrollBar1;
+    private javax.swing.JPanel pnWords;
+    private javax.swing.JScrollPane scpWords;
     // End of variables declaration//GEN-END:variables
+
+    private void setEventLbWord(JLabel lbWord, Word word) {
+        lbWord.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Component[] sss = pnWords.getComponents();
+                for(Component ss : sss){
+                    JLabel s = (JLabel) ss;
+                    s.setForeground(Color.BLACK);
+                }
+                
+                lbWord.setForeground(Color.LIGHT_GRAY);
+                
+                PanelCenter pnCenter = (PanelCenter) splitPane.getRightComponent();
+                JScrollPane scpCenterCenter = pnCenter.getScpCenterCenter();
+                JEditorPane taWordView = new JEditorPane();
+                
+                taWordView.setContentType("text/html");
+                taWordView.setText(word.toString());
+                taWordView.setBounds(0, 0, SizeUtils.getPreWidth(taWordView), SizeUtils.getPreHeight(taWordView));
+                taWordView.setEditable(false);
+                
+                scpCenterCenter.setViewportView(taWordView);
+                scpCenterCenter.revalidate();
+                splitPane.revalidate();
+            }
+            
+        });
+    }
 }

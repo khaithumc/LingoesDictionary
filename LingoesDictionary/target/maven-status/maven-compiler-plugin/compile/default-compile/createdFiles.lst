@@ -9,6 +9,7 @@ dao\WordDaoImpl.class
 view\sub\PanelLeft$1.class
 entities\MeaningOfWord.class
 utils\MyDefaultMetalTheme.class
+view\sub\HomepagePanel$1.class
 view\sub\HomepagePanel.class
 view\MainForm.class
 test\Test.class

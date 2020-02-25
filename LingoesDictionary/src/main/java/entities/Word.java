@@ -63,12 +63,11 @@ public class Word {
     @Override
     public String toString() {
         StringBuilder tmp = new StringBuilder();
-        tmp.append("Từ: ").append(vocabulary)
-                .append("\n").append("Phát âm: ").append(pronounce);
+        tmp.append("<p style=\"color:blue;font-size:20px;font-family:tahoma\"><b>Từ: ").append(vocabulary).append("</b> <i>").append(pronounce).append("</i></p>");
         if(sameWord != null){
-            tmp.append("\nViết cách khác: ").append(sameWord);
+            tmp.append("<p style=\"font-size:14px;font-family:tahoma\">Viết cách khác: ").append(sameWord).append("</p>");
         }
-        typeOfWords.forEach(type -> tmp.append("\n").append(type.toString()));
+        typeOfWords.forEach(type -> tmp.append(type.toString()));
         
         return tmp.toString();
     }

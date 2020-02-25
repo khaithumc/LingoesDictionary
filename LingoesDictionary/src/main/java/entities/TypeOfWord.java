@@ -63,11 +63,8 @@ public class TypeOfWord {
     @Override
     public String toString() {
         StringBuilder tmp = new StringBuilder();
-        tmp.append("Từ loại:").append(this.type);
-        
-        for (MeaningOfWord mow : means) {
-            tmp.append("\n").append(mow);
-        }
+        tmp.append("<p style=\"color:red;font-size:16px;font-family:tahoma\"><b>Từ loại:</b>").append(this.type).append("</p>");
+        means.forEach(mow -> tmp.append(mow));
         
         return tmp.toString();
     }
