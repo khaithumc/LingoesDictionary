@@ -19,7 +19,5 @@ public class Test{
     public static void main(String[] args) {
         File file = new File("C:\\Users\\huyvi\\Desktop\\Dictionary_trim.txt");
         WordDao wordDao = new WordDaoImpl();
-        List<Word> words = wordDao.getWords(file);
-        words.forEach(System.out::println);
     }
 }

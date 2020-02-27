@@ -16,6 +16,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -29,7 +31,7 @@ import utils.SizeUtils;
 public class HomepagePanel extends javax.swing.JPanel {
 
     private JSplitPane splitPane;
-    private List<Word> words;
+    private Set<Map.Entry<String, Word>> words;
     private final String pathToDataFile = getClass().getResource("/documents/Dictionary.txt").getFile();
     private final int maximumWordLength = 200;
     private final Font wordFont = new Font("Tahoma", Font.PLAIN, 16);
@@ -39,7 +41,8 @@ public class HomepagePanel extends javax.swing.JPanel {
         
         WordDao wdao = new WordDaoImpl();
         File file = new File(pathToDataFile);
-        words = wdao.getWords(file);
+        Map<String, Word> dictionary = wdao.getWords(file);
+        words = dictionary.entrySet();
         
         initComponents();
         initComponentManuallys();
@@ -50,14 +53,13 @@ public class HomepagePanel extends javax.swing.JPanel {
         int height = (tmpLabel.getPreferredSize().height + 5) * words.size();
         pnWords.setPreferredSize(new Dimension(pnWords.getPreferredSize().width, height));
         
-        for(int i = 0; i < words.size(); i++){
-            Word word = words.get(i);
-            JLabel lbWord = new JLabel(word.getVocabulary());
+        words.forEach((word) -> {
+            JLabel lbWord = new JLabel((String) word.getKey());
             lbWord.setPreferredSize(new Dimension(maximumWordLength, lbWord.getPreferredSize().height));
             pnWords.add(lbWord);
             
-            setEventLbWord(lbWord, word);
-        }
+            setEventLbWord(lbWord, word.getValue());
+        });
     }
 
     /**
@@ -95,7 +97,7 @@ public class HomepagePanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane scpWords;
     // End of variables declaration//GEN-END:variables
 
-    private void setEventLbWord(JLabel lbWord, Word word) {
+    private void setEventLbWord(JLabel lbWord, Word wordValue) {
         lbWord.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -109,14 +111,14 @@ public class HomepagePanel extends javax.swing.JPanel {
                 
                 PanelCenter pnCenter = (PanelCenter) splitPane.getRightComponent();
                 JScrollPane scpCenterCenter = pnCenter.getScpCenterCenter();
-                JEditorPane taWordView = new JEditorPane();
+                JEditorPane epWordView = new JEditorPane();
                 
-                taWordView.setContentType("text/html");
-                taWordView.setText(word.toString());
-                taWordView.setBounds(0, 0, SizeUtils.getPreWidth(taWordView), SizeUtils.getPreHeight(taWordView));
-                taWordView.setEditable(false);
+                epWordView.setContentType("text/html");
+                epWordView.setText(wordValue.toString());
+                epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
+                epWordView.setEditable(false);
                 
-                scpCenterCenter.setViewportView(taWordView);
+                scpCenterCenter.setViewportView(epWordView);
                 scpCenterCenter.revalidate();
                 splitPane.revalidate();
             }
