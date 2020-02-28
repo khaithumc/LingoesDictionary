@@ -15,14 +15,10 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import utils.SizeUtils;
 
 /**
  *
@@ -31,7 +27,8 @@ import utils.SizeUtils;
 public class HomepagePanel extends javax.swing.JPanel {
 
     private JSplitPane splitPane;
-    private Set<Map.Entry<String, Word>> words;
+    private Map<String, Word> dictionary;
+    
     private final String pathToDataFile = getClass().getResource("/documents/Dictionary.txt").getFile();
     private final int maximumWordLength = 200;
     private final Font wordFont = new Font("Tahoma", Font.PLAIN, 16);
@@ -41,14 +38,14 @@ public class HomepagePanel extends javax.swing.JPanel {
         
         WordDao wdao = new WordDaoImpl();
         File file = new File(pathToDataFile);
-        Map<String, Word> dictionary = wdao.getWords(file);
-        words = dictionary.entrySet();
+        dictionary = wdao.getWords(file);
         
         initComponents();
         initComponentManuallys();
     }
     
     private void initComponentManuallys() {
+        Set<Map.Entry<String, Word>> words = dictionary.entrySet();
         JLabel tmpLabel = new JLabel("Word");
         int height = (tmpLabel.getPreferredSize().height + 5) * words.size();
         pnWords.setPreferredSize(new Dimension(pnWords.getPreferredSize().width, height));
@@ -110,19 +107,21 @@ public class HomepagePanel extends javax.swing.JPanel {
                 lbWord.setForeground(Color.LIGHT_GRAY);
                 
                 PanelCenter pnCenter = (PanelCenter) splitPane.getRightComponent();
-                JScrollPane scpCenterCenter = pnCenter.getScpCenterCenter();
-                JEditorPane epWordView = new JEditorPane();
+                pnCenter.loadWord(wordValue);
                 
-                epWordView.setContentType("text/html");
-                epWordView.setText(wordValue.toString());
-                epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
-                epWordView.setEditable(false);
-                
-                scpCenterCenter.setViewportView(epWordView);
-                scpCenterCenter.revalidate();
-                splitPane.revalidate();
             }
-            
         });
+    }
+    
+    public void searchWord(String text){
+        
+    }
+    
+    public void searchFullWord(String text){
+        if(dictionary.containsKey(text)){
+            
+        } else {
+            
+        }
     }
 }

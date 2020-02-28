@@ -5,13 +5,15 @@
  */
 package view.sub;
 
+import entities.Word;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
-import javax.swing.JScrollPane;
+import javax.swing.JEditorPane;
 import javax.swing.border.LineBorder;
+import utils.SizeUtils;
 
 /**
  *
@@ -61,9 +63,27 @@ public class PanelCenter extends javax.swing.JPanel {
             }
         }
     }
+    
+    public void loadWord(Word word){
+        JEditorPane epWordView = new JEditorPane();
+                
+        epWordView.setContentType("text/html");
+        epWordView.setText(word.toString());
+        epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
+        epWordView.setEditable(false);
 
-    public JScrollPane getScpCenterCenter(){
-        return this.scpCenterCenter;
+        scpCenterCenter.setViewportView(epWordView);
+    }
+    
+    public void loadNoResult(){
+        JEditorPane epWordView = new JEditorPane();
+                
+        epWordView.setContentType("text/html");
+        epWordView.setText("<p style=\"color:red;font-size:20px;font-family:tahoma\"><b>KHÔNG CÓ TỪ NÀY TRONG TỪ ĐIỂN</b></p>");
+        epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
+        epWordView.setEditable(false);
+
+        scpCenterCenter.setViewportView(epWordView);
     }
     
     /**

@@ -2,6 +2,7 @@ entities\TypeOfWord.class
 view\sub\PanelCenter$1.class
 dao\WordDao.class
 utils\SizeUtils.class
+view\MainForm$3.class
 view\sub\AddendumPanel.class
 view\sub\SettingPanel.class
 view\MainForm$1.class
@@ -16,4 +17,5 @@ test\Test.class
 entities\Word.class
 view\sub\PanelCenter.class
 utils\ImageUtils.class
+view\MainForm$2.class
 view\sub\PanelLeft.class

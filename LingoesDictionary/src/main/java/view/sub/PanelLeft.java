@@ -5,6 +5,7 @@
  */
 package view.sub;
 
+import java.awt.Button;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -55,7 +56,6 @@ public class PanelLeft extends javax.swing.JPanel {
         pnLeftCenter.add(homepagePanel, btHomepage.getIcon().toString());
         pnLeftCenter.add(settingPanel, btSetting.getIcon().toString());
         pnLeftCenter.add(addendumPanel, btAddendum.getIcon().toString());
-         
     }
     
     private void initEvents() {
@@ -95,7 +95,22 @@ public class PanelLeft extends javax.swing.JPanel {
             }
         }
     }
+    
+    public void dosomething(){
+        
+    }
+    
+    public void searchWordInHomepagePanel(String text){
+        homepagePanel.searchWord(text);
 
+        if(!homepagePanel.isVisible()){
+            homepagePanel.setVisible(true);
+        }
+    }
+    
+    public void searchFullWordInHomepagePanel(String text){
+        homepagePanel.searchFullWord(text);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
