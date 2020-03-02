@@ -5,15 +5,14 @@
  */
 package view.sub;
 
-import entities.Word;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
-import utils.SizeUtils;
+import utils.VoiceUtils;
 
 /**
  *
@@ -21,12 +20,17 @@ import utils.SizeUtils;
  */
 public class PanelCenter extends javax.swing.JPanel {
 
-    public PanelCenter() {
+    private HomepagePanel hp;
+    private static String voiceWord = "";
+
+    public PanelCenter(HomepagePanel homepagePanel) {
+        hp = homepagePanel;
+
         initComponents();
         initComponentManuallys();
         initEvents();
     }
-    
+
     private void initComponentManuallys() {
         btSpeaker.setToolTipText("Phát âm phần văn bản được chọn");
         btCopy.setToolTipText("Sao chép");
@@ -35,10 +39,12 @@ public class PanelCenter extends javax.swing.JPanel {
         btFind.setToolTipText("Tìm...");
         btTranslate.setToolTipText("Sử dụng chức năng dich đoạn văn bản");
         btHomepage.setToolTipText("Start Page");
+
     }
 
     private void initEvents() {
         initPnTopButtonEvents();
+        initBtSpeakerEvents();
     }
 
     private void initPnTopButtonEvents() {
@@ -50,42 +56,38 @@ public class PanelCenter extends javax.swing.JPanel {
                     @Override
                     public void mouseEntered(MouseEvent e) {
                         button.setContentAreaFilled(true);
-                        button.setBorder(new LineBorder(new Color(102,102,102)));
+                        button.setBorder(new LineBorder(new Color(102, 102, 102)));
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                         button.setContentAreaFilled(false);
-                         button.setBorder(null);
+                        button.setContentAreaFilled(false);
+                        button.setBorder(null);
                     }
-                    
+
                 });
             }
         }
     }
-    
-    public void loadWord(Word word){
-        JEditorPane epWordView = new JEditorPane();
-                
-        epWordView.setContentType("text/html");
-        epWordView.setText(word.toString());
-        epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
-        epWordView.setEditable(false);
 
-        scpCenterCenter.setViewportView(epWordView);
+    private void initBtSpeakerEvents() {
+        btSpeaker.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                VoiceUtils.ConvertTextToSpeech(voiceWord);
+            }
+        });
     }
-    
-    public void loadNoResult(){
-        JEditorPane epWordView = new JEditorPane();
-                
-        epWordView.setContentType("text/html");
-        epWordView.setText("<p style=\"color:red;font-size:20px;font-family:tahoma\"><b>KHÔNG CÓ TỪ NÀY TRONG TỪ ĐIỂN</b></p>");
-        epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
-        epWordView.setEditable(false);
 
-        scpCenterCenter.setViewportView(epWordView);
+    public void getlbWord(String s) {
+        System.out.println(s);
+        voiceWord = s;
     }
-    
+
+    public JScrollPane getScpCenterCenter() {
+        return this.scpCenterCenter;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

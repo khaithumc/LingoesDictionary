@@ -15,10 +15,14 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import utils.SizeUtils;
 
 /**
  *
@@ -26,9 +30,11 @@ import javax.swing.JSplitPane;
  */
 public class HomepagePanel extends javax.swing.JPanel {
 
-    private JSplitPane splitPane;
-    private Map<String, Word> dictionary;
+    private PanelCenter panelCenter;
     
+    private JLabel lbWord;
+    private JSplitPane splitPane;
+    private Set<Map.Entry<String, Word>> words;
     private final String pathToDataFile = getClass().getResource("/documents/Dictionary.txt").getFile();
     private final int maximumWordLength = 200;
     private final Font wordFont = new Font("Tahoma", Font.PLAIN, 16);
@@ -38,20 +44,22 @@ public class HomepagePanel extends javax.swing.JPanel {
         
         WordDao wdao = new WordDaoImpl();
         File file = new File(pathToDataFile);
-        dictionary = wdao.getWords(file);
+        Map<String, Word> dictionary = wdao.getWords(file);
+        words = dictionary.entrySet();
         
         initComponents();
         initComponentManuallys();
     }
     
     private void initComponentManuallys() {
-        Set<Map.Entry<String, Word>> words = dictionary.entrySet();
+        panelCenter = new PanelCenter(this);
+        
         JLabel tmpLabel = new JLabel("Word");
         int height = (tmpLabel.getPreferredSize().height + 5) * words.size();
         pnWords.setPreferredSize(new Dimension(pnWords.getPreferredSize().width, height));
         
         words.forEach((word) -> {
-            JLabel lbWord = new JLabel((String) word.getKey());
+            lbWord = new JLabel((String) word.getKey());
             lbWord.setPreferredSize(new Dimension(maximumWordLength, lbWord.getPreferredSize().height));
             pnWords.add(lbWord);
             
@@ -98,6 +106,8 @@ public class HomepagePanel extends javax.swing.JPanel {
         lbWord.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                panelCenter.getlbWord(lbWord.getText());
+                
                 Component[] sss = pnWords.getComponents();
                 for(Component ss : sss){
                     JLabel s = (JLabel) ss;
@@ -107,21 +117,20 @@ public class HomepagePanel extends javax.swing.JPanel {
                 lbWord.setForeground(Color.LIGHT_GRAY);
                 
                 PanelCenter pnCenter = (PanelCenter) splitPane.getRightComponent();
-                pnCenter.loadWord(wordValue);
+                JScrollPane scpCenterCenter = pnCenter.getScpCenterCenter();
+                JEditorPane epWordView = new JEditorPane();
                 
+                epWordView.setContentType("text/html");
+                epWordView.setText(wordValue.toString());
+                epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
+                epWordView.setEditable(false);
+                
+                
+                scpCenterCenter.setViewportView(epWordView);
+                scpCenterCenter.revalidate();
+                splitPane.revalidate();
             }
+            
         });
-    }
-    
-    public void searchWord(String text){
-        
-    }
-    
-    public void searchFullWord(String text){
-        if(dictionary.containsKey(text)){
-            
-        } else {
-            
-        }
     }
 }

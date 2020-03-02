@@ -8,22 +8,21 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.JRootPane;
 import javax.swing.JSplitPane;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.plaf.metal.DefaultMetalTheme;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import utils.ImageUtils;
 import utils.MyDefaultMetalTheme;
 import view.sub.PanelCenter;
+//import utils.MyDefaultMetalTheme;
 import view.sub.PanelLeft;
 
 /**
@@ -47,7 +46,6 @@ public class MainForm extends javax.swing.JFrame {
     public MainForm() {
         initComponents();
         initComponentManuallys();
-        initEvents();
     }
 
     /**
@@ -202,7 +200,7 @@ public class MainForm extends javax.swing.JFrame {
 
         splitPane.setBorder(border);
 
-        pnCenter = new PanelCenter();
+        pnCenter = new PanelCenter(null);
         pnLeft = new PanelLeft(splitPane);
 
         splitPane.add(pnLeft, JSplitPane.LEFT);
@@ -226,36 +224,6 @@ public class MainForm extends javax.swing.JFrame {
         }
         SwingUtilities.updateComponentTreeUI(this);
     }
-    
-    private void initEvents() {
-        initTfSearchEvents();
-        initBtSearchEvents();
-    }
-
-    private void initTfSearchEvents() {
-        tfSearch.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    
-                } else {
-                    String typingText = tfSearch.getText();
-                    pnLeft.searchWordInHomepagePanel(typingText);
-                }
-            }
-        });
-    }
-    
-    private void initBtSearchEvents() {
-        btSearch.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                String text = tfSearch.getText();
-                pnLeft.searchFullWordInHomepagePanel(text);
-            }
-            
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btBack;
@@ -266,6 +234,4 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JPanel pnTop;
     private javax.swing.JTextField tfSearch;
     // End of variables declaration//GEN-END:variables
-
-    
 }
