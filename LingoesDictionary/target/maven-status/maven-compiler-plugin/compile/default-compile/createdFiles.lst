@@ -1,10 +1,12 @@
 entities\TypeOfWord.class
 view\sub\PanelCenter$1.class
 dao\WordDao.class
+view\sub\StartPagePanel.class
 utils\SizeUtils.class
 view\sub\AddendumPanel.class
 view\sub\SettingPanel.class
 view\MainForm$1.class
+view\sub\PanelCenter$2.class
 dao\WordDaoImpl.class
 view\sub\PanelLeft$1.class
 entities\MeaningOfWord.class
@@ -14,6 +16,9 @@ view\sub\HomepagePanel.class
 view\MainForm.class
 test\Test.class
 entities\Word.class
+utils\VoiceUtils.class
 view\sub\PanelCenter.class
 utils\ImageUtils.class
+view\sub\PanelCenter$3.class
 view\sub\PanelLeft.class
+test\VoiceTest.class

@@ -5,13 +5,16 @@
  */
 package view.sub;
 
+import entities.Word;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
+import utils.SizeUtils;
 import utils.VoiceUtils;
 
 /**
@@ -22,6 +25,7 @@ public class PanelCenter extends javax.swing.JPanel {
 
     private HomepagePanel hp;
     private static String voiceWord = "";
+    private final String noResultText = "<h1><b>KHÔNG CÓ TỪ NÀY TRONG TỪ ĐIỂN</b></h1>";
 
     public PanelCenter(HomepagePanel homepagePanel) {
         hp = homepagePanel;
@@ -38,13 +42,14 @@ public class PanelCenter extends javax.swing.JPanel {
         btPrint.setToolTipText("In...");
         btFind.setToolTipText("Tìm...");
         btTranslate.setToolTipText("Sử dụng chức năng dich đoạn văn bản");
-        btHomepage.setToolTipText("Start Page");
+        btStartPage.setToolTipText("Start Page");
 
     }
 
     private void initEvents() {
         initPnTopButtonEvents();
         initBtSpeakerEvents();
+        initBtStartPage();
     }
 
     private void initPnTopButtonEvents() {
@@ -79,8 +84,7 @@ public class PanelCenter extends javax.swing.JPanel {
         });
     }
 
-    public void getlbWord(String s) {
-        System.out.println(s);
+    public void setLbWord(String s) {
         voiceWord = s;
     }
 
@@ -88,6 +92,15 @@ public class PanelCenter extends javax.swing.JPanel {
         return this.scpCenterCenter;
     }
 
+    public void loadWord(Word word){
+        JEditorPane epWordView = new JEditorPane();
+        epWordView.setContentType("text/html");
+        epWordView.setText(word.toString());
+        epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
+        epWordView.setEditable(false);
+
+        scpCenterCenter.setViewportView(epWordView);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -104,7 +117,7 @@ public class PanelCenter extends javax.swing.JPanel {
         btPrint = new javax.swing.JButton();
         btFind = new javax.swing.JButton();
         btTranslate = new javax.swing.JButton();
-        btHomepage = new javax.swing.JButton();
+        btStartPage = new javax.swing.JButton();
         scpCenterCenter = new javax.swing.JScrollPane();
 
         setBackground(new java.awt.Color(253, 247, 250));
@@ -138,9 +151,9 @@ public class PanelCenter extends javax.swing.JPanel {
         btTranslate.setContentAreaFilled(false);
         btTranslate.setFocusPainted(false);
 
-        btHomepage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pictures/icon-homepage2-16px.png"))); // NOI18N
-        btHomepage.setContentAreaFilled(false);
-        btHomepage.setFocusPainted(false);
+        btStartPage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pictures/icon-homepage2-16px.png"))); // NOI18N
+        btStartPage.setContentAreaFilled(false);
+        btStartPage.setFocusPainted(false);
 
         javax.swing.GroupLayout pnCenterTopLayout = new javax.swing.GroupLayout(pnCenterTop);
         pnCenterTop.setLayout(pnCenterTopLayout);
@@ -160,7 +173,7 @@ public class PanelCenter extends javax.swing.JPanel {
                 .addGap(5, 5, 5)
                 .addComponent(btTranslate, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
-                .addComponent(btHomepage, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btStartPage, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pnCenterTopLayout.setVerticalGroup(
             pnCenterTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,7 +186,7 @@ public class PanelCenter extends javax.swing.JPanel {
                     .addComponent(btPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btFind, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btTranslate, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btHomepage, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btStartPage, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         add(pnCenterTop, java.awt.BorderLayout.PAGE_START);
@@ -184,12 +197,34 @@ public class PanelCenter extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCopy;
     private javax.swing.JButton btFind;
-    private javax.swing.JButton btHomepage;
     private javax.swing.JButton btPrint;
     private javax.swing.JButton btSave;
     private javax.swing.JButton btSpeaker;
+    private javax.swing.JButton btStartPage;
     private javax.swing.JButton btTranslate;
     private javax.swing.JPanel pnCenterTop;
     private javax.swing.JScrollPane scpCenterCenter;
     // End of variables declaration//GEN-END:variables
+
+    private void initBtStartPage() {
+        btStartPage.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                StartPagePanel pnStartPage = new StartPagePanel();
+                scpCenterCenter.setViewportView(pnStartPage);
+                scpCenterCenter.revalidate();
+            }
+            
+        });
+    }
+    
+    public void loadNoResult(){
+        JEditorPane epWordView = new JEditorPane();
+        epWordView.setContentType("text/html");
+        epWordView.setText(noResultText);
+        epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
+        epWordView.setEditable(false);
+
+        scpCenterCenter.setViewportView(epWordView);
+    }
 }

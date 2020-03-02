@@ -15,9 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -25,14 +23,14 @@ import java.util.Map;
  */
 public class WordDaoImpl implements WordDao{
 
-    private Map<String, Word> dictionary;
+    private List<Word> words;
 
     public WordDaoImpl() {
-        dictionary = new LinkedHashMap<>();
+        words = new ArrayList<>();
     }
     
     @Override
-    public Map<String, Word> getWords(File file) {
+    public List<Word> getWords(File file) {
         try {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
@@ -51,8 +49,7 @@ public class WordDaoImpl implements WordDao{
 		while ((str = in.readLine()) != null) {
                     if(str.startsWith("@")){
                         word = new Word();
-                        String vocabulary = str.substring(1, str.indexOf(" /"));
-                        word.setVocabulary(vocabulary);
+                        word.setVocabulary(str.substring(1, str.indexOf(" /")));
                         String tmpString = str.substring(str.indexOf('/'), str.lastIndexOf('/') + 1);
                         String[] tmpListString = tmpString.split(" ");
                         word.setPronounce(tmpListString[0]);
@@ -63,7 +60,7 @@ public class WordDaoImpl implements WordDao{
                         
                         typeOfWords = new ArrayList<>();
                         word.setTypeOfWord(typeOfWords);
-                        dictionary.put(vocabulary, word);
+                        words.add(word);
                         continue;
                     }
                     
@@ -90,7 +87,6 @@ public class WordDaoImpl implements WordDao{
                     }
                     
                     if(str.startsWith("=")){
-                        str = str.replace("+", " ->");
                         examples.add(str.substring(1));
                         continue;
                     }
@@ -115,6 +111,6 @@ public class WordDaoImpl implements WordDao{
             e.printStackTrace();
         }
         
-        return dictionary;
+        return words;
     }
 }

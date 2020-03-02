@@ -7,12 +7,12 @@ package dao;
 
 import entities.Word;
 import java.io.File;
-import java.util.Map;
+import java.util.List;
 
 /**
  *
  * @author huyvi
  */
 public interface WordDao {
-    public Map<String, Word> getWords(File file);
+    public List<Word> getWords(File file);
 }
