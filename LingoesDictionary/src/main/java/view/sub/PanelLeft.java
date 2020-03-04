@@ -8,8 +8,9 @@ package view.sub;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.function.BiPredicate;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JSplitPane;
@@ -67,9 +68,9 @@ public class PanelLeft extends javax.swing.JPanel {
         for (Component component : components) {
             if (component instanceof JButton) {
                 final JButton button = (JButton) component;
-                button.addMouseListener(new MouseAdapter() {
+                button.addActionListener(new ActionListener() {
                     @Override
-                    public void mousePressed(MouseEvent e) {
+                    public void actionPerformed(ActionEvent arg0) {
                         String key = button.getIcon().toString();
                         cardLayout.show(pnLeftCenter, key);
                         
@@ -95,7 +96,22 @@ public class PanelLeft extends javax.swing.JPanel {
             }
         }
     }
-
+    
+    public void searchWord(String text, BiPredicate func){
+        homepagePanel.searchWord(text, func);
+    }
+    
+    public boolean isBtHomepageActive(){
+        System.out.println(btHomepage.isEnabled());
+        return btHomepage.isShowing();
+    }
+    
+    public void activeBtHomepage(){
+        if(homepagePanel.isVisible() == false){
+            btHomepage.doClick();
+            pnLeftCenter.revalidate();
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

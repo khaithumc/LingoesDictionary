@@ -12,12 +12,16 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
-import javax.swing.JLabel;
+import java.util.function.BiPredicate;
+import javax.swing.JButton;
 import javax.swing.JSplitPane;
+import javax.swing.SwingConstants;
+import utils.SizeUtils;
 
 /**
  *
@@ -26,17 +30,18 @@ import javax.swing.JSplitPane;
 public class HomepagePanel extends javax.swing.JPanel {
 
     private PanelCenter pnCenter;
-    private JLabel lbWord;
     private JSplitPane splitPane;
-    private JLabel[] lbWords;
+    private JButton[] btWords;
     
     private List<Word> words;
     private final String pathToDataFile = getClass().getResource("/documents/Dictionary.txt").getFile();
     private final int maximumWordLength = 200;
     private final Font wordFont = new Font("Tahoma", Font.PLAIN, 16);
-    private int indexOfCurLbWord = 0;
+    private int indexOfCurBtWord = 0;
     private final Color normalColor = Color.BLACK;
     private final Color clickedColor = Color.LIGHT_GRAY;
+    private int verLengthOfPnWords;
+    private int heightOfBtWord;
     
     public HomepagePanel(JSplitPane splitPane) {
         this.splitPane = splitPane;
@@ -48,28 +53,37 @@ public class HomepagePanel extends javax.swing.JPanel {
         initComponents();
         initComponentManuallys();
         
-        lbWords = getLbWords();
+        btWords = getBtWords();
     }
     
     private void initComponentManuallys() {
+        scpWords.getVerticalScrollBar().setUnitIncrement(16);
         pnCenter = new PanelCenter(this);
         
-        JLabel tmpLabel = new JLabel("Word");
-        int height = (tmpLabel.getPreferredSize().height + 5) * words.size();
-        pnWords.setPreferredSize(new Dimension(pnWords.getPreferredSize().width, height));
+        JButton tmpButton = new JButton("Word");
+        heightOfBtWord = SizeUtils.getPreHeight(tmpButton);
+        verLengthOfPnWords = (tmpButton.getPreferredSize().height + 5) * words.size();
+        pnWords.setPreferredSize(new Dimension(pnWords.getPreferredSize().width, verLengthOfPnWords));
         
         words.forEach((word) -> {
-            lbWord = new JLabel(word.getVocabulary());
-            JLabel lbWord = new JLabel(word.getVocabulary());
-            lbWord.setPreferredSize(new Dimension(maximumWordLength, lbWord.getPreferredSize().height));
-            lbWord.setName(indexOfCurLbWord + "");
-            indexOfCurLbWord++;
-            pnWords.add(lbWord);
+            JButton btWord = new JButton(word.getVocabulary());
+            btWord.setPreferredSize(new Dimension(maximumWordLength, btWord.getPreferredSize().height));
+            btWord.setName(indexOfCurBtWord + "");
+            btWord.setBorder(null);
+            btWord.setFocusPainted(false);
+            btWord.setContentAreaFilled(false);
+            btWord.setMargin(new Insets(0, 0, 0, 0));
+            btWord.setBorderPainted(false);
+            btWord.setOpaque(false);
+            btWord.setHorizontalAlignment(SwingConstants.LEFT);
             
-            setEventLbWord(lbWord, word);
+            indexOfCurBtWord++;
+            pnWords.add(btWord);
+            
+            setEventBtWord(btWord, word);
         });
         
-        indexOfCurLbWord = 0;
+        indexOfCurBtWord = 0;
     }
 
     /**
@@ -107,53 +121,49 @@ public class HomepagePanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane scpWords;
     // End of variables declaration//GEN-END:variables
 
-    private void setEventLbWord(JLabel lbWord, Word word) {
-        lbWord.addMouseListener(new MouseAdapter() {
+    private void setEventBtWord(JButton btWord, Word word) {
+        btWord.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                pnCenter.setLbWord(lbWord.getText());
+            public void actionPerformed(ActionEvent arg0) {
+                pnCenter.setLbWord(btWord.getText());
                 
-                lbWords[indexOfCurLbWord].setForeground(normalColor);
-                indexOfCurLbWord = Integer.parseInt(lbWord.getName());
-                lbWord.setForeground(clickedColor);
+                btWords[indexOfCurBtWord].setForeground(normalColor);
+                indexOfCurBtWord = Integer.parseInt(btWord.getName());
+                btWord.setForeground(clickedColor);
                 
                 PanelCenter pnCenter = (PanelCenter) splitPane.getRightComponent();
                 pnCenter.loadWord(word);
             }
-            
         });
     }
 
-    private JLabel[] getLbWords() {
-        JLabel[] lbWords = new JLabel[words.size()];
+    private JButton[] getBtWords() {
+        JButton[] btWords = new JButton[words.size()];
         Component[] tmp = pnWords.getComponents();
         
         for(int i = 0; i < words.size(); i++) {
-            lbWords[i] = (JLabel) tmp[i];
+            btWords[i] = (JButton) tmp[i];
         }
         
-        return lbWords;
+        return btWords;
     }
     
-    public void searchWord(String text){
-        for(JLabel lbWord : lbWords){
-            if(lbWord.getText().startsWith(text)){
+    public void searchWord(String text, BiPredicate func){
+        for(int i = 0; i < btWords.length; i++){
+            if(func.test(btWords[i].getText(), text)){
                 // active MouseListener of this lbWord
-                
+                btWords[i].doClick();
+                splitPane.getRightComponent().revalidate();
+                scpWords.getVerticalScrollBar().setValue(i * (heightOfBtWord + 5));
                 // then break this loop
                 return;
             }
         }
         
+        // set last button back to normal
+        btWords[indexOfCurBtWord].setForeground(normalColor);
         // if no lbWord contain text -> pnCenterCenter show no result
-        pnCenter.loadNoResult();
-    }
-    
-    public void searchFullWord(String text){
-        for(int i = 0; i < words.size(); i++){
-            if(words.get(i).getVocabulary().equals(text)){
-                
-            }
-        }
+        PanelCenter pnCenterOfSplitPane = (PanelCenter) splitPane.getRightComponent();
+        pnCenterOfSplitPane.loadNoResult();
     }
 }

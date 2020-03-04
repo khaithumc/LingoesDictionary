@@ -25,7 +25,7 @@ public class PanelCenter extends javax.swing.JPanel {
 
     private HomepagePanel hp;
     private static String voiceWord = "";
-    private final String noResultText = "<h1><b>KHÔNG CÓ TỪ NÀY TRONG TỪ ĐIỂN</b></h1>";
+    private final String noResultText = "<h1 style=\"color:red;font-size:20px;font-family:tahoma\"><b>KHÔNG CÓ TỪ NÀY TRONG TỪ ĐIỂN</b></h1>";
 
     public PanelCenter(HomepagePanel homepagePanel) {
         hp = homepagePanel;
@@ -100,6 +100,7 @@ public class PanelCenter extends javax.swing.JPanel {
         epWordView.setEditable(false);
 
         scpCenterCenter.setViewportView(epWordView);
+        scpCenterCenter.getVerticalScrollBar().setValue(0);
     }
     /**
      * This method is called from within the constructor to initialize the form.

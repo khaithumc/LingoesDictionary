@@ -8,6 +8,11 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiPredicate;
 import javax.swing.JRootPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
@@ -20,7 +25,6 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import utils.ImageUtils;
 import utils.MyDefaultMetalTheme;
 import view.sub.PanelCenter;
-//import utils.MyDefaultMetalTheme;
 import view.sub.PanelLeft;
 
 /**
@@ -28,12 +32,12 @@ import view.sub.PanelLeft;
  * @author USER
  */
 public class MainForm extends javax.swing.JFrame {
-
+    private List<String> searchedWord;
     private final Container container = getContentPane();
     private final String ICON_PATH = "F:\\Java Project\\LingoesDictionary\\target\\classes\\pictures\\icon-lingoes-16px.jpg";
-    private final JSplitPane splitPane = new JSplitPane();
     private final String pathToDicData = getClass().getResource("/documents/Dictionary.txt").toString();
 
+    private final JSplitPane splitPane = new JSplitPane();
     private PanelLeft pnLeft;
     private PanelCenter pnCenter;
     private final MyDefaultMetalTheme defaultMetalTheme = new MyDefaultMetalTheme();
@@ -42,8 +46,12 @@ public class MainForm extends javax.swing.JFrame {
             new MatteBorder(0, 5, 0, 5, new Color(201, 208, 240)), new MatteBorder(1, 1, 0, 1, Color.GRAY));
 
     public MainForm() {
+        searchedWord = new ArrayList<>();
+        
         initComponents();
         initComponentManuallys();
+        initEvents();
+        
     }
 
     /**
@@ -232,4 +240,26 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JPanel pnTop;
     private javax.swing.JTextField tfSearch;
     // End of variables declaration//GEN-END:variables
+
+    private void initEvents() {
+        initTfSearchEvents();
+    }
+
+    private void initTfSearchEvents() {
+        tfSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                pnLeft.activeBtHomepage();
+                String typingText = tfSearch.getText();
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    searchedWord.add(typingText);
+                    pnLeft.searchWord(typingText, (BiPredicate<String, String>) (String arg0, String arg1) -> arg0.equalsIgnoreCase(arg1));
+                } else {
+                    pnLeft.searchWord(typingText, (BiPredicate<String, String>) (String arg0, String arg1) -> arg0.startsWith(arg1));
+                    
+                }
+            }
+            
+        });
+    }
 }

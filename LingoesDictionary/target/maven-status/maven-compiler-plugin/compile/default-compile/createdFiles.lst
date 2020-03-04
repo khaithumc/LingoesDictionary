@@ -19,6 +19,7 @@ entities\Word.class
 utils\VoiceUtils.class
 view\sub\PanelCenter.class
 utils\ImageUtils.class
+view\MainForm$2.class
 view\sub\PanelCenter$3.class
 view\sub\PanelLeft.class
 test\VoiceTest.class
