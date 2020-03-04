@@ -49,7 +49,7 @@ public class PanelCenter extends javax.swing.JPanel {
     private void initEvents() {
         initPnTopButtonEvents();
         initBtSpeakerEvents();
-        initBtStartPage();
+        initBtStartPageEvents();
     }
 
     private void initPnTopButtonEvents() {
@@ -98,9 +98,9 @@ public class PanelCenter extends javax.swing.JPanel {
         epWordView.setText(word.toString());
         epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
         epWordView.setEditable(false);
+        epWordView.setCaretPosition(0);
 
         scpCenterCenter.setViewportView(epWordView);
-        scpCenterCenter.getVerticalScrollBar().setValue(0);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -207,7 +207,7 @@ public class PanelCenter extends javax.swing.JPanel {
     private javax.swing.JScrollPane scpCenterCenter;
     // End of variables declaration//GEN-END:variables
 
-    private void initBtStartPage() {
+    private void initBtStartPageEvents() {
         btStartPage.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {

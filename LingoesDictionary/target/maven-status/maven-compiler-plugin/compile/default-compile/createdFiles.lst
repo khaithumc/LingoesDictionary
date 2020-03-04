@@ -1,8 +1,10 @@
 entities\TypeOfWord.class
 view\sub\PanelCenter$1.class
+view\MainForm$4.class
 dao\WordDao.class
 view\sub\StartPagePanel.class
 utils\SizeUtils.class
+view\MainForm$3.class
 view\sub\AddendumPanel.class
 view\sub\SettingPanel.class
 view\MainForm$1.class
@@ -12,6 +14,7 @@ view\sub\PanelLeft$1.class
 entities\MeaningOfWord.class
 utils\MyDefaultMetalTheme.class
 view\sub\HomepagePanel$1.class
+view\MainForm$5.class
 view\sub\HomepagePanel.class
 view\MainForm.class
 test\Test.class

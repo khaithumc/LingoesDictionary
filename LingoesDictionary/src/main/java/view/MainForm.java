@@ -10,6 +10,8 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -32,11 +34,14 @@ import view.sub.PanelLeft;
  * @author USER
  */
 public class MainForm extends javax.swing.JFrame {
-    private List<String> searchedWord;
+    private List<String> searchedWords;
+    private int indexOfCurWord;
     private final Container container = getContentPane();
     private final String ICON_PATH = "F:\\Java Project\\LingoesDictionary\\target\\classes\\pictures\\icon-lingoes-16px.jpg";
     private final String pathToDicData = getClass().getResource("/documents/Dictionary.txt").toString();
-
+    private final BiPredicate<String, String> searchWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.startsWith(s2);
+    private final BiPredicate<String, String> searchFullWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.equalsIgnoreCase(s2);
+    
     private final JSplitPane splitPane = new JSplitPane();
     private PanelLeft pnLeft;
     private PanelCenter pnCenter;
@@ -46,8 +51,9 @@ public class MainForm extends javax.swing.JFrame {
             new MatteBorder(0, 5, 0, 5, new Color(201, 208, 240)), new MatteBorder(1, 1, 0, 1, Color.GRAY));
 
     public MainForm() {
-        searchedWord = new ArrayList<>();
-        
+        searchedWords = new ArrayList<>();
+        indexOfCurWord = -1;
+
         initComponents();
         initComponentManuallys();
         initEvents();
@@ -203,7 +209,6 @@ public class MainForm extends javax.swing.JFrame {
         splitPane.setOneTouchExpandable(true);
         splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setForeground(new Color(204,204,204));
-
         splitPane.setBorder(border);
 
         pnCenter = new PanelCenter(null);
@@ -243,23 +248,71 @@ public class MainForm extends javax.swing.JFrame {
 
     private void initEvents() {
         initTfSearchEvents();
+        initBtBackEvents();
+        initBtNextEvents();
+        initBtSearchEvents();
     }
 
     private void initTfSearchEvents() {
         tfSearch.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
+                // call method of homepagePanel to search word
                 pnLeft.activeBtHomepage();
                 String typingText = tfSearch.getText();
                 if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    searchedWord.add(typingText);
-                    pnLeft.searchWord(typingText, (BiPredicate<String, String>) (String arg0, String arg1) -> arg0.equalsIgnoreCase(arg1));
+                    searchedWords.add(typingText);
+                    pnLeft.searchWord(typingText, searchFullWordFunc);
                 } else {
-                    pnLeft.searchWord(typingText, (BiPredicate<String, String>) (String arg0, String arg1) -> arg0.startsWith(arg1));
-                    
+                    pnLeft.searchWord(typingText, searchWordFunc);
                 }
+                
+                // set indexOfCurWord to last index of word list
+                indexOfCurWord = searchedWords.size() - 1;
             }
             
+        });
+    }
+
+    private void initBtBackEvents() {
+        btBack.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(indexOfCurWord > 0){
+                    String word = searchedWords.get(--indexOfCurWord);
+                    tfSearch.setText(word);
+                    pnLeft.activeBtHomepage();
+                    pnLeft.searchWord(word, searchFullWordFunc);
+                }
+            }
+        });
+    }
+
+    private void initBtNextEvents() {
+        btNext.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(indexOfCurWord < searchedWords.size() - 1){
+                    String word = searchedWords.get(++indexOfCurWord);
+                    tfSearch.setText(word);
+                    pnLeft.activeBtHomepage();
+                    pnLeft.searchWord(word, searchFullWordFunc);
+                }
+            }
+        });
+    }
+
+    private void initBtSearchEvents() {
+        btSearch.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pnLeft.activeBtHomepage();
+                String typingText = tfSearch.getText();
+                searchedWords.add(typingText);
+                indexOfCurWord = searchedWords.size() - 1;
+                
+                pnLeft.searchWord(typingText, searchFullWordFunc);
+            }
         });
     }
 }
