@@ -148,7 +148,7 @@ public class HomepagePanel extends javax.swing.JPanel {
         return btWords;
     }
     
-    public void searchWord(String text, BiPredicate func){
+    public int searchWord(String text, BiPredicate func){
         for(int i = 0; i < btWords.length; i++){
             if(func.test(btWords[i].getText(), text)){
                 // active MouseListener of this lbWord
@@ -156,14 +156,26 @@ public class HomepagePanel extends javax.swing.JPanel {
                 splitPane.getRightComponent().revalidate();
                 scpWords.getVerticalScrollBar().setValue(i * (heightOfBtWord + 5));
                 // then break this loop
-                return;
+                return i;
             }
         }
         
-        // set last button back to normal
-        btWords[indexOfCurBtWord].setForeground(normalColor);
         // if no lbWord contain text -> pnCenterCenter show no result
         PanelCenter pnCenterOfSplitPane = (PanelCenter) splitPane.getRightComponent();
         pnCenterOfSplitPane.loadNoResult();
+        
+        return -1;
+    }
+    
+    public void showWordAtIndex(int index){
+        if(index > -1){
+            btWords[index].doClick();
+            splitPane.getRightComponent().revalidate();
+            scpWords.getVerticalScrollBar().setValue(index * (heightOfBtWord + 5));
+        } else {
+            // if no lbWord contain text -> pnCenterCenter show no result
+            PanelCenter pnCenterOfSplitPane = (PanelCenter) splitPane.getRightComponent();
+            pnCenterOfSplitPane.loadNoResult();
+        }
     }
 }

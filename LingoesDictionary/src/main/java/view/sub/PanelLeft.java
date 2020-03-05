@@ -97,8 +97,8 @@ public class PanelLeft extends javax.swing.JPanel {
         }
     }
     
-    public void searchWord(String text, BiPredicate func){
-        homepagePanel.searchWord(text, func);
+    public int searchWord(String text, BiPredicate func){
+        return homepagePanel.searchWord(text, func);
     }
     
     public boolean isBtHomepageActive(){
@@ -111,6 +111,10 @@ public class PanelLeft extends javax.swing.JPanel {
             btHomepage.doClick();
             pnLeftCenter.revalidate();
         }
+    }
+    
+    public void showWordAtIndex(int index){
+        homepagePanel.showWordAtIndex(index);
     }
     /**
      * This method is called from within the constructor to initialize the form.

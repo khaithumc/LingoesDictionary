@@ -5,9 +5,11 @@
  */
 package view;
 
+import entities.WordAndIndex;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -15,8 +17,11 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JRootPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -34,28 +39,30 @@ import view.sub.PanelLeft;
  * @author USER
  */
 public class MainForm extends javax.swing.JFrame {
-    private List<String> searchedWords;
     private int indexOfCurWord;
     private final Container container = getContentPane();
     private final String ICON_PATH = "F:\\Java Project\\LingoesDictionary\\target\\classes\\pictures\\icon-lingoes-16px.jpg";
     private final String pathToDicData = getClass().getResource("/documents/Dictionary.txt").toString();
     private final BiPredicate<String, String> searchWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.startsWith(s2);
     private final BiPredicate<String, String> searchFullWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.equalsIgnoreCase(s2);
+    private final Font normalWordFont = new Font("Tahoma", Font.PLAIN, 16);
+    private DefaultComboBoxModel<WordAndIndex> cbbModel;
     
     private final JSplitPane splitPane = new JSplitPane();
     private PanelLeft pnLeft;
     private PanelCenter pnCenter;
     private final MyDefaultMetalTheme defaultMetalTheme = new MyDefaultMetalTheme();
+    private JTextField tfSearch;
 
     private final Border border = new CompoundBorder(
             new MatteBorder(0, 5, 0, 5, new Color(201, 208, 240)), new MatteBorder(1, 1, 0, 1, Color.GRAY));
 
     public MainForm() {
-        searchedWords = new ArrayList<>();
         indexOfCurWord = -1;
 
         initComponents();
         initComponentManuallys();
+        
         initEvents();
         
     }
@@ -70,10 +77,10 @@ public class MainForm extends javax.swing.JFrame {
     private void initComponents() {
 
         pnTop = new javax.swing.JPanel();
-        tfSearch = new javax.swing.JTextField();
         btSearch = new javax.swing.JButton();
         btBack = new javax.swing.JButton();
         btNext = new javax.swing.JButton();
+        cbbSearch = new javax.swing.JComboBox<>();
         pnBottom = new javax.swing.JPanel();
         lbFooter = new javax.swing.JLabel();
 
@@ -82,10 +89,6 @@ public class MainForm extends javax.swing.JFrame {
         setUndecorated(true);
 
         pnTop.setBackground(new java.awt.Color(201, 208, 240));
-
-        tfSearch.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        tfSearch.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
-        tfSearch.setPreferredSize(new java.awt.Dimension(6, 22));
 
         btSearch.setBackground(new java.awt.Color(255, 255, 255));
         btSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pictures/arrow-icon-16px.png"))); // NOI18N
@@ -102,6 +105,10 @@ public class MainForm extends javax.swing.JFrame {
         btNext.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
         btNext.setFocusPainted(false);
 
+        cbbSearch.setEditable(true);
+        cbbSearch.setToolTipText("");
+        cbbSearch.setBorder(null);
+
         javax.swing.GroupLayout pnTopLayout = new javax.swing.GroupLayout(pnTop);
         pnTop.setLayout(pnTopLayout);
         pnTopLayout.setHorizontalGroup(
@@ -111,25 +118,26 @@ public class MainForm extends javax.swing.JFrame {
                 .addComponent(btBack, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addComponent(btNext, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(tfSearch, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
-                .addGap(2, 2, 2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbbSearch, 0, 294, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
         pnTopLayout.setVerticalGroup(
             pnTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTopLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
                 .addGroup(pnTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btNext, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btBack, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(pnTopLayout.createSequentialGroup()
+                .addComponent(cbbSearch)
+                .addGap(11, 11, 11))
         );
 
-        pnTopLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btBack, btNext, btSearch, tfSearch});
+        pnTopLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btBack, btNext, btSearch});
 
         getContentPane().add(pnTop, java.awt.BorderLayout.PAGE_START);
 
@@ -205,7 +213,8 @@ public class MainForm extends javax.swing.JFrame {
         setSize(800, 500);
         setTitle("Lingoes");
         setIconImage(ImageUtils.load(ICON_PATH));
-
+        
+        // init splitPane
         splitPane.setOneTouchExpandable(true);
         splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setForeground(new Color(204,204,204));
@@ -220,7 +229,16 @@ public class MainForm extends javax.swing.JFrame {
         container.add(splitPane, BorderLayout.CENTER);
 
         initTitleBar();
-        //initPnCenterConponents();
+        
+        // init cbbSearch
+        cbbModel = new DefaultComboBoxModel<>();
+        cbbSearch.setModel(cbbModel);
+        
+        
+        
+        // init tfSearch
+        tfSearch = (JTextField) cbbSearch.getEditor().getEditorComponent();
+        tfSearch.setFont(normalWordFont);
     }
 
     // KHÔNG HIỂU
@@ -240,10 +258,10 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton btBack;
     private javax.swing.JButton btNext;
     private javax.swing.JButton btSearch;
+    private javax.swing.JComboBox<WordAndIndex> cbbSearch;
     private javax.swing.JLabel lbFooter;
     private javax.swing.JPanel pnBottom;
     private javax.swing.JPanel pnTop;
-    private javax.swing.JTextField tfSearch;
     // End of variables declaration//GEN-END:variables
 
     private void initEvents() {
@@ -254,21 +272,33 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void initTfSearchEvents() {
-        tfSearch.addKeyListener(new KeyAdapter() {
+        cbbSearch.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 // call method of homepagePanel to search word
                 pnLeft.activeBtHomepage();
                 String typingText = tfSearch.getText();
                 if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    searchedWords.add(typingText);
-                    pnLeft.searchWord(typingText, searchFullWordFunc);
+                    // nếu không tồn tại từ đang tra trong ds từ đã lưu thì sẽ thực hiện tìm kiếm và thêm mới vào ds từ
+                    // getIndexOf sẽ dựa vào hàm equals trong WordAndIndex để xác định (chỉ so sánh 2 từ, không so sánh 2 index)
+                    WordAndIndex wai = new WordAndIndex(typingText, -1);
+                    int indexOfTypingText = cbbModel.getIndexOf(wai);
+                    if(indexOfTypingText == -1){
+                        wai.setIndex(pnLeft.searchWord(typingText, searchFullWordFunc));
+                        cbbModel.addElement(wai);
+                    } else {
+                        wai = cbbModel.getElementAt(indexOfTypingText);
+                        cbbModel.removeElementAt(indexOfTypingText);
+                        cbbModel.addElement(wai);
+                        pnLeft.showWordAtIndex(wai.getIndex());
+                    }
+                    
                 } else {
                     pnLeft.searchWord(typingText, searchWordFunc);
                 }
                 
                 // set indexOfCurWord to last index of word list
-                indexOfCurWord = searchedWords.size() - 1;
+                indexOfCurWord = cbbModel.getSize() - 1;
             }
             
         });
@@ -279,10 +309,10 @@ public class MainForm extends javax.swing.JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 if(indexOfCurWord > 0){
-                    String word = searchedWords.get(--indexOfCurWord);
-                    tfSearch.setText(word);
+                    WordAndIndex wai = cbbModel.getElementAt(--indexOfCurWord);
+                    tfSearch.setText(wai.getWord());
                     pnLeft.activeBtHomepage();
-                    pnLeft.searchWord(word, searchFullWordFunc);
+                    pnLeft.showWordAtIndex(wai.getIndex());
                 }
             }
         });
@@ -292,11 +322,11 @@ public class MainForm extends javax.swing.JFrame {
         btNext.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if(indexOfCurWord < searchedWords.size() - 1){
-                    String word = searchedWords.get(++indexOfCurWord);
-                    tfSearch.setText(word);
+                if(indexOfCurWord < cbbModel.getSize() - 1){
+                    WordAndIndex wai = cbbModel.getElementAt(++indexOfCurWord);
+                    tfSearch.setText(wai.getWord());
                     pnLeft.activeBtHomepage();
-                    pnLeft.searchWord(word, searchFullWordFunc);
+                    pnLeft.showWordAtIndex(wai.getIndex());
                 }
             }
         });
@@ -308,10 +338,8 @@ public class MainForm extends javax.swing.JFrame {
             public void mousePressed(MouseEvent e) {
                 pnLeft.activeBtHomepage();
                 String typingText = tfSearch.getText();
-                searchedWords.add(typingText);
-                indexOfCurWord = searchedWords.size() - 1;
-                
-                pnLeft.searchWord(typingText, searchFullWordFunc);
+                cbbModel.addElement(new WordAndIndex(typingText, pnLeft.searchWord(typingText, searchFullWordFunc)));
+                indexOfCurWord = cbbModel.getSize() - 1;
             }
         });
     }
