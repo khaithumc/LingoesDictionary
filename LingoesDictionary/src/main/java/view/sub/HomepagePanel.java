@@ -126,7 +126,7 @@ public class HomepagePanel extends javax.swing.JPanel {
         btWord.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                pnCenter.setLbWord(btWord.getText());
+                pnCenter.setlbWord(btWord.getText());
                 
                 btWords[indexOfCurBtWord].setForeground(normalColor);
                 indexOfCurBtWord = Integer.parseInt(btWord.getName());

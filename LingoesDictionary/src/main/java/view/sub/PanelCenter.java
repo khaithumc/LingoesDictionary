@@ -35,7 +35,8 @@ import utils.VoiceUtils;
  */
 public class PanelCenter extends javax.swing.JPanel {
 
-    private HomepagePanel hp;
+
+    private static JEditorPane epSelected = new JEditorPane();
     private static String voiceWord = "";
     private final String noResultText = "<h1 style=\"color:red;font-size:20px;font-family:tahoma\"><b>KHÔNG CÓ TỪ NÀY TRONG TỪ ĐIỂN</b></h1>";
     private final String typeOfSaveFile = "html";
@@ -43,7 +44,6 @@ public class PanelCenter extends javax.swing.JPanel {
     private Word curWord;
 
     public PanelCenter(HomepagePanel homepagePanel) {
-        hp = homepagePanel;
 
         initComponents();
         initComponentManuallys();
@@ -65,8 +65,7 @@ public class PanelCenter extends javax.swing.JPanel {
         initPnTopButtonEvents();
         initBtSpeakerEvents();
         initBtStartPageEvents();
-        initBtSaveEvents();
-        initBtFindEvents();
+       
     }
 
     private void initPnTopButtonEvents() {
@@ -96,12 +95,16 @@ public class PanelCenter extends javax.swing.JPanel {
         btSpeaker.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                VoiceUtils.ConvertTextToSpeech(voiceWord);
+                if (epSelected.getSelectedText() == null) {
+                    VoiceUtils.ConvertTextToSpeech(voiceWord);
+                } else {
+                    VoiceUtils.ConvertTextToSpeech(epSelected.getSelectedText());
+                }
             }
         });
     }
 
-    public void setLbWord(String s) {
+    public void setlbWord(String s) {
         voiceWord = s;
     }
 
@@ -109,9 +112,7 @@ public class PanelCenter extends javax.swing.JPanel {
         return this.scpCenterCenter;
     }
 
-    public void loadWord(Word word){
-        this.curWord = word;
-        
+    public void loadWord(Word word) {
         JEditorPane epWordView = new JEditorPane();
         epWordView.setContentType("text/html");
         epWordView.setText(word.toHTMLString());
@@ -119,8 +120,35 @@ public class PanelCenter extends javax.swing.JPanel {
         epWordView.setEditable(false);
         epWordView.setCaretPosition(0);
 
+        //-------------------------------
+        epSelected = epWordView;
+        //------------------------------
+
         scpCenterCenter.setViewportView(epWordView);
     }
+
+    private void initBtStartPageEvents() {
+        btStartPage.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                StartPagePanel pnStartPage = new StartPagePanel();
+                scpCenterCenter.setViewportView(pnStartPage);
+                scpCenterCenter.revalidate();
+            }
+
+        });
+    }
+
+    public void loadNoResult() {
+        JEditorPane epWordView = new JEditorPane();
+        epWordView.setContentType("text/html");
+        epWordView.setText(noResultText);
+        epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
+        epWordView.setEditable(false);
+
+        scpCenterCenter.setViewportView(epWordView);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -226,103 +254,5 @@ public class PanelCenter extends javax.swing.JPanel {
     private javax.swing.JScrollPane scpCenterCenter;
     // End of variables declaration//GEN-END:variables
 
-    private void initBtStartPageEvents() {
-        btStartPage.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                StartPagePanel pnStartPage = new StartPagePanel();
-                scpCenterCenter.setViewportView(pnStartPage);
-                scpCenterCenter.revalidate();
-            }
-            
-        });
-    }
-    
-    public void loadNoResult(){
-        JEditorPane epWordView = new JEditorPane();
-        epWordView.setContentType("text/html");
-        epWordView.setText(noResultText);
-        epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
-        epWordView.setEditable(false);
 
-        scpCenterCenter.setViewportView(epWordView);
-    }
-    private void initBtFindEvents(){
-        btFind.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                new FindPanel((JTextComponent)scpCenterCenter.getViewport().getView()).setVisible(true);
-            }
-            
-        });
-    }
-
-    private void initBtSaveEvents() {
-        btSave.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                
-                Component tmpComponent = scpCenterCenter.getViewport().getView();
-                
-                // if the showing is not a word -> show a dialog to announce and return
-                if(!(tmpComponent instanceof JEditorPane)){
-                    JOptionPane.showMessageDialog(null, "This is not a word to save");
-                    return;
-                }
-                
-                
-                // show saveDialog and get Path to save file
-                JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
-                FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("HTML file (*.html)", typeOfSaveFile);
-                fileChooser.addChoosableFileFilter(extensionFilter);
-                fileChooser.setFileFilter(extensionFilter);
-                fileChooser.setSelectedFile(new File(curWord.getVocabulary() + extendsionSeparator + typeOfSaveFile));
-
-                String pathToSave = "";
-                int selection = fileChooser.showSaveDialog(null);
-                
-                if(selection == JFileChooser.APPROVE_OPTION){
-                    File fileToSave = fileChooser.getSelectedFile();
-                    pathToSave = getValidPath(fileToSave);
-                    
-                    // create file
-                    File saveFile = new File(pathToSave);
-
-                    // if file existed -> change file name 
-                    try {
-                        if(saveFile.createNewFile()){
-                        // get value from JEditorPane in scpCenterCenter
-                        JEditorPane tmpEP = (JEditorPane) tmpComponent;
-
-                        // add value into created file
-                        FileWriter fileWriter = new FileWriter(saveFile);
-                        fileWriter.write(HTMLCodeUtils.convertToHTMLCodes(curWord.toHTMLString()));
-                        fileWriter.close();
-                        JOptionPane.showMessageDialog(null, "Word was saved");
-                        } else {
-                            JOptionPane.showMessageDialog(null, "file name existed, please try another one");
-                        }
-
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-    
-    /*
-    user can type wrong file name (etc: test.g.sad.fsf.dfwe)
-    -> this method will turn wrong file name to right with file extension is html (etc: test.html)
-    */
-    private String getValidPath(File fileToSave) {
-        String parentPath = fileToSave.getParent();
-        String validFileName = fileToSave.getPath();
-        
-        do {
-            validFileName = FilenameUtils.getBaseName(validFileName);
-        } while (validFileName.contains(extendsionSeparator + ""));
-        
-        return parentPath + File.separator + validFileName + extendsionSeparator + typeOfSaveFile;
-    }
 }

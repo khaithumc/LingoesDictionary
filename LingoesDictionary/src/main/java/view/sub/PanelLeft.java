@@ -27,7 +27,7 @@ public class PanelLeft extends javax.swing.JPanel {
     
     private HomepagePanel homepagePanel;
     private SettingPanel settingPanel;
-    private AddendumPanel addendumPanel;
+    //private AddendumPanel addendumPanel;
     private JSplitPane splitPane;
     
     private final Border defaultBorder = new JButton().getBorder();
@@ -49,13 +49,13 @@ public class PanelLeft extends javax.swing.JPanel {
         
         homepagePanel = new HomepagePanel(splitPane);
         settingPanel = new SettingPanel();
-        addendumPanel = new AddendumPanel();
+        //addendumPanel = new AddendumPanel();
         
         btHomepage.setBorder(pnLeftButtonHighLightBorder);
         
         pnLeftCenter.add(homepagePanel, btHomepage.getIcon().toString());
         pnLeftCenter.add(settingPanel, btSetting.getIcon().toString());
-        pnLeftCenter.add(addendumPanel, btAddendum.getIcon().toString());
+        //pnLeftCenter.add(addendumPanel, btAddendum.getIcon().toString());
          
     }
     

@@ -210,9 +210,6 @@ public class MainForm extends javax.swing.JFrame {
         setResizable(true);
         setSize(800, 500);
         setTitle("Lingoes");
-        setIconImage(ImageUtils.load(ICON_PATH));
-        
-        // init splitPane
         splitPane.setOneTouchExpandable(true);
         splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setForeground(new Color(204,204,204));
