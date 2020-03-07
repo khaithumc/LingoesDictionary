@@ -50,6 +50,8 @@ public class PanelCenter extends javax.swing.JPanel {
         initPnTopButtonEvents();
         initBtSpeakerEvents();
         initBtStartPageEvents();
+        initBtFindEvents();
+
     }
 
     private void initPnTopButtonEvents() {
@@ -83,6 +85,14 @@ public class PanelCenter extends javax.swing.JPanel {
             }
         });
     }
+    private void initBtFindEvents(){
+        btFind.addMouseListener(new MouseAdapter(){
+        @Override
+        public void mousePressed(MouseEvent e){
+            new FindButton().setVisible(true);
+        }
+    });
+    }
 
     public void setLbWord(String s) {
         voiceWord = s;
@@ -92,7 +102,7 @@ public class PanelCenter extends javax.swing.JPanel {
         return this.scpCenterCenter;
     }
 
-    public void loadWord(Word word){
+    public void loadWord(Word word) {
         JEditorPane epWordView = new JEditorPane();
         epWordView.setContentType("text/html");
         epWordView.setText(word.toString());
@@ -102,6 +112,7 @@ public class PanelCenter extends javax.swing.JPanel {
 
         scpCenterCenter.setViewportView(epWordView);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -215,11 +226,11 @@ public class PanelCenter extends javax.swing.JPanel {
                 scpCenterCenter.setViewportView(pnStartPage);
                 scpCenterCenter.revalidate();
             }
-            
+
         });
     }
-    
-    public void loadNoResult(){
+
+    public void loadNoResult() {
         JEditorPane epWordView = new JEditorPane();
         epWordView.setContentType("text/html");
         epWordView.setText(noResultText);

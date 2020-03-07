@@ -26,6 +26,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import utils.ImageUtils;
 import utils.MyDefaultMetalTheme;
+import view.sub.FindButton;
 import view.sub.PanelCenter;
 import view.sub.PanelLeft;
 
@@ -57,6 +58,7 @@ public class MainForm extends javax.swing.JFrame {
         initComponents();
         initComponentManuallys();
         initEvents();
+        
         
     }
 
