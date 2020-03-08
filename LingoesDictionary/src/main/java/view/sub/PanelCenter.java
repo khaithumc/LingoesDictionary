@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.text.JTextComponent;
 import org.apache.commons.io.FilenameUtils;
 import utils.HTMLCodeUtils;
 import utils.SizeUtils;
@@ -65,6 +66,7 @@ public class PanelCenter extends javax.swing.JPanel {
         initBtSpeakerEvents();
         initBtStartPageEvents();
         initBtSaveEvents();
+        initBtFindEvents();
     }
 
     private void initPnTopButtonEvents() {
@@ -244,6 +246,15 @@ public class PanelCenter extends javax.swing.JPanel {
         epWordView.setEditable(false);
 
         scpCenterCenter.setViewportView(epWordView);
+    }
+    private void initBtFindEvents(){
+        btFind.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                new FindPanel((JTextComponent)scpCenterCenter.getViewport().getView()).setVisible(true);
+            }
+            
+        });
     }
 
     private void initBtSaveEvents() {
