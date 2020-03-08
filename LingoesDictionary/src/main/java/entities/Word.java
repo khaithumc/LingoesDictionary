@@ -62,12 +62,16 @@ public class Word {
 
     @Override
     public String toString() {
+        return "Từ: " + this.vocabulary + ", phát âm: " + this.vocabulary + ", từ đồng nghĩa: " + this.sameWord;
+    }
+    
+    public String toHTMLString(){
         StringBuilder tmp = new StringBuilder();
         tmp.append("<p style=\"color:blue;font-size:20px;font-family:tahoma\"><b>Từ: ").append(vocabulary).append("</b> <i>").append(pronounce).append("</i></p>");
         if(sameWord != null){
             tmp.append("<p style=\"font-size:14px;font-family:tahoma\">Viết cách khác: ").append(sameWord).append("</p>");
         }
-        typeOfWords.forEach(type -> tmp.append(type.toString()));
+        typeOfWords.forEach(type -> tmp.append(type.toHTMLString()));
         
         return tmp.toString();
     }

@@ -63,11 +63,18 @@ public class TypeOfWord {
     @Override
     public String toString() {
         StringBuilder tmp = new StringBuilder();
-        tmp.append("<p style=\"color:red;font-size:16px;font-family:tahoma\"><b>Từ loại:</b>").append(this.type).append("</p>");
-        means.forEach(mow -> tmp.append(mow));
+        tmp.append("Từ loại: ").append(this.type).append("\n");
+        means.forEach(mow -> tmp.append(mow.toString()));
         
         return tmp.toString();
     }
     
+    public String toHTMLString(){
+        StringBuilder tmp = new StringBuilder();
+        tmp.append("<p style=\"color:red;font-size:16px;font-family:tahoma\"><b>Từ loại:</b>").append(this.type).append("</p>");
+        means.forEach(mow -> tmp.append(mow.toHTMLString()));
+        
+        return tmp.toString();
+    }
     
 }
