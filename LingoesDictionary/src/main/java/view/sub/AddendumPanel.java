@@ -5,15 +5,11 @@
  */
 package view.sub;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javafx.scene.control.SplitPane;
-import javax.swing.JButton;
 import javax.swing.JSplitPane;
-import javax.swing.border.LineBorder;
 
 /**
  *
@@ -21,59 +17,22 @@ import javax.swing.border.LineBorder;
  */
 public class AddendumPanel extends javax.swing.JPanel {
 
-    private JSplitPane splitPane;
     /**
      * Creates new form AddendumPanel
      */
+    private JSplitPane splitPane;
+    private final Color normalColor = Color.BLACK;
+    private final Color clickedColor = Color.LIGHT_GRAY;
+    private final Font wordFont = new Font("Tahoma", Font.BOLD, 14);
+    private final String pathToIrreVerbs = getClass().getResource("/documents/IRREGULAR_VERBS.html").getPath();
+    private final String pathToAbbreviations = getClass().getResource("/documents/ABBREVIATIONS.html").getPath();
+    
     public AddendumPanel(JSplitPane splitPane) {
         this.splitPane = splitPane;
-  
         initComponents();
-        initComponentManuallys();
-        initEvents();
-    }
-    
-    private void initComponentManuallys() {
-        
-    }
-    
-    private void initEvents() {
-       final Component[] components = pnCenter.getComponents();
-       for(Component component : components) {
-           if(component instanceof JButton) {
-               final JButton button = (JButton) component;
-               button.addMouseListener(new MouseAdapter() {
-                   @Override
-                   public void mouseEntered(MouseEvent e) {
-                      button.setContentAreaFilled(true);
-                      button.setBackground(new Color(204,204,255));
-                      button.setBorder(new LineBorder(new Color(102,102,102)));
-                   }
-
-                   @Override
-                   public void mouseExited(MouseEvent e) {
-                       button.setContentAreaFilled(false);
-                       button.setBackground(Color.WHITE);
-                       button.setBorder(null);
-                   }
-                   
-                   
-               });
-           }
-       }
-        
-        //initBtAcronymEvents();
-    }
-    
-    private void initBtAcronymEvents() {
-        btAcronym.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                PanelCenter panelCenter = (PanelCenter) splitPane.getRightComponent();
-              
-            }
-            
-        });
+        initComponentsManuallys();
+        initLbIVerbEvents();
+        initLbAbbreviationsEvents();
     }
 
     /**
@@ -85,86 +44,69 @@ public class AddendumPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        pnCenter = new javax.swing.JPanel();
-        btAcronym = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        lbIVerbs = new javax.swing.JLabel();
+        lbAbbreviations = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
-        setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(153, 153, 153)));
+        lbIVerbs.setText("IRREGULAR VERBS");
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Phụ lục");
+        lbAbbreviations.setText("ABBREVIATIONS");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(338, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jLabel1)
-                .addGap(5, 5, 5))
-        );
-
-        add(jPanel1, java.awt.BorderLayout.PAGE_START);
-
-        btAcronym.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        btAcronym.setText("Danh mục từ viết tắt");
-        btAcronym.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btAcronym.setBorderPainted(false);
-        btAcronym.setContentAreaFilled(false);
-        btAcronym.setFocusPainted(false);
-        btAcronym.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        btAcronym.setOpaque(true);
-
-        jButton2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButton2.setText("Bảng động từ bất quy tắc");
-        jButton2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jButton2.setBorderPainted(false);
-        jButton2.setContentAreaFilled(false);
-        jButton2.setFocusPainted(false);
-        jButton2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-
-        javax.swing.GroupLayout pnCenterLayout = new javax.swing.GroupLayout(pnCenter);
-        pnCenter.setLayout(pnCenterLayout);
-        pnCenterLayout.setHorizontalGroup(
-            pnCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnCenterLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btAcronym, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbIVerbs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbAbbreviations, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        pnCenterLayout.setVerticalGroup(
-            pnCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnCenterLayout.createSequentialGroup()
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btAcronym, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(204, Short.MAX_VALUE))
+                .addComponent(lbIVerbs)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbAbbreviations)
+                .addContainerGap(248, Short.MAX_VALUE))
         );
-
-        add(pnCenter, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btAcronym;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel pnCenter;
+    private javax.swing.JLabel lbAbbreviations;
+    private javax.swing.JLabel lbIVerbs;
     // End of variables declaration//GEN-END:variables
+
+    private void initLbIVerbEvents() {
+        lbIVerbs.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                PanelCenter pnCenter = (PanelCenter) splitPane.getRightComponent();
+                pnCenter.showHTMLFile(pathToIrreVerbs);
+                lbAbbreviations.setForeground(normalColor);
+                lbIVerbs.setForeground(clickedColor);
+            }
+        });
+    }
+
+    private void initLbAbbreviationsEvents() {
+        lbAbbreviations.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                PanelCenter pnCenter = (PanelCenter) splitPane.getRightComponent();
+                pnCenter.showHTMLFile(pathToAbbreviations);
+                lbIVerbs.setForeground(normalColor);
+                lbAbbreviations.setForeground(clickedColor);
+            }
+        });
+    }
+
+    private void initComponentsManuallys() {
+        lbIVerbs.setFont(wordFont);
+        lbAbbreviations.setFont(wordFont);
+    }
 }

@@ -49,8 +49,6 @@ public class HomepagePanel extends javax.swing.JPanel {
         WordDao wdao = new WordDaoImpl();
         File file = new File(pathToDataFile);
         words = wdao.getWords(file);
-        System.out.println("========");
-        System.out.println(words.size());
         initComponents();
         initComponentManuallys();
         

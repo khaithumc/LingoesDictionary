@@ -147,6 +147,18 @@ public class PanelCenter extends javax.swing.JPanel {
 
         scpCenterCenter.setViewportView(epWordView);
     }
+    
+     public void showHTMLFile(String path){
+        File file = new File(path);
+        JEditorPane ep = new JEditorPane();
+        try{
+            ep.setPage(file.toURI().toURL());
+        } catch (IOException ex) {
+        }
+        
+        scpCenterCenter.setViewportView(ep);
+        
+    }
 
     private void initBtStartPageEvents() {
         btStartPage.addMouseListener(new MouseAdapter() {
