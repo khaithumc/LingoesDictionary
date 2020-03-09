@@ -37,14 +37,14 @@ public class PanelCenter extends javax.swing.JPanel {
 
 
     private static JEditorPane epSelected = new JEditorPane();
-    private static String voiceWord = "";
+    private static String voiceWord;
+    private static String translatorText;
     private final String noResultText = "<h1 style=\"color:red;font-size:20px;font-family:tahoma\"><b>KHÔNG CÓ TỪ NÀY TRONG TỪ ĐIỂN</b></h1>";
     private final String typeOfSaveFile = "html";
     private final char extendsionSeparator = '.';
     private Word curWord;
 
-    public PanelCenter(HomepagePanel homepagePanel) {
-
+    public PanelCenter() {
         initComponents();
         initComponentManuallys();
         initEvents();
@@ -65,7 +65,19 @@ public class PanelCenter extends javax.swing.JPanel {
         initPnTopButtonEvents();
         initBtSpeakerEvents();
         initBtStartPageEvents();
-       
+        initBtTranslateEvents();
+    }
+
+    private void initBtTranslateEvents() {
+        btTranslate.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                TranslatorPanel translatorPanel = new TranslatorPanel();
+                scpCenterCenter.setViewportView(translatorPanel);
+                scpCenterCenter.revalidate();
+            }
+
+        });
     }
 
     private void initPnTopButtonEvents() {
@@ -95,17 +107,24 @@ public class PanelCenter extends javax.swing.JPanel {
         btSpeaker.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (epSelected.getSelectedText() == null) {
+                
+               if (epSelected.getSelectedText() == null && translatorText == null) {
                     VoiceUtils.ConvertTextToSpeech(voiceWord);
-                } else {
+                } else if (translatorText != null) {
+                    VoiceUtils.ConvertTextToSpeech(translatorText);
+                } else{
                     VoiceUtils.ConvertTextToSpeech(epSelected.getSelectedText());
                 }
             }
         });
     }
 
-    public void setlbWord(String s) {
+    public void setLbWord(String s) {
         voiceWord = s;
+    }
+
+    public void setTranslatorText(String s) {
+        translatorText = s;
     }
 
     public JScrollPane getScpCenterCenter() {
@@ -172,6 +191,7 @@ public class PanelCenter extends javax.swing.JPanel {
         setLayout(new java.awt.BorderLayout());
 
         pnCenterTop.setBackground(new java.awt.Color(204, 204, 255));
+        pnCenterTop.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(153, 153, 153)));
 
         btSpeaker.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pictures/icon-speaker-16px.png"))); // NOI18N
         btSpeaker.setContentAreaFilled(false);

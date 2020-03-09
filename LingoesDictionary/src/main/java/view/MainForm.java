@@ -215,7 +215,7 @@ public class MainForm extends javax.swing.JFrame {
         splitPane.setForeground(new Color(204,204,204));
         splitPane.setBorder(border);
 
-        pnCenter = new PanelCenter(null);
+        pnCenter = new PanelCenter();
         pnLeft = new PanelLeft(splitPane);
 
         splitPane.add(pnLeft, JSplitPane.LEFT);

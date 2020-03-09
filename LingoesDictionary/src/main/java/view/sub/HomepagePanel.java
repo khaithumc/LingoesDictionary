@@ -59,7 +59,7 @@ public class HomepagePanel extends javax.swing.JPanel {
     
     private void initComponentManuallys() {
         scpWords.getVerticalScrollBar().setUnitIncrement(16);
-        pnCenter = new PanelCenter(this);
+        pnCenter = new PanelCenter();
         
         JButton tmpButton = new JButton("Word");
         heightOfBtWord = SizeUtils.getPreHeight(tmpButton);
@@ -126,7 +126,7 @@ public class HomepagePanel extends javax.swing.JPanel {
         btWord.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                pnCenter.setlbWord(btWord.getText());
+                pnCenter.setLbWord(btWord.getText());
                 
                 btWords[indexOfCurBtWord].setForeground(normalColor);
                 indexOfCurBtWord = Integer.parseInt(btWord.getName());
