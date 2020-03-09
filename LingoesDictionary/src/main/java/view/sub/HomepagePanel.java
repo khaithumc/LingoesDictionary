@@ -34,7 +34,7 @@ public class HomepagePanel extends javax.swing.JPanel {
     private JButton[] btWords;
     
     private List<Word> words;
-    private final String pathToDataFile = "C:\\Users\\VO DINH DUNG\\Desktop\\LingoesDictionary\\LingoesDictionary\\target\\classes\\documents\\Dictionary.txt";
+    private final String pathToDataFile = getClass().getResource("/documents/Dictionary.txt").getFile();
     private final int maximumWordLength = 200;
     private final Font wordFont = new Font("Tahoma", Font.PLAIN, 16);
     private int indexOfCurBtWord = 0;

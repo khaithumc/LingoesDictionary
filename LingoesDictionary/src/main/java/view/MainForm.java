@@ -39,8 +39,8 @@ import view.sub.PanelLeft;
 public class MainForm extends javax.swing.JFrame {
     private int indexOfCurWord;
     private final Container container = getContentPane();
-    private final String ICON_PATH = "F:\\Java Project\\LingoesDictionary\\target\\classes\\pictures\\icon-lingoes-16px.jpg";
-    //private final String pathToDicData = "C:\\Users\\VO DINH DUNG\\Desktop\\LingoesDictionary\\LingoesDictionary\\target\\classes\\documents\\Dictionary.txt";
+    private String ICON_PATH;
+    //private final String pathToDicData = getClass().getResource("/documents/Dictionary.txt").getFile();
     private final BiPredicate<String, String> searchWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.startsWith(s2);
     private final BiPredicate<String, String> searchFullWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.equalsIgnoreCase(s2);
     private final Font normalWordFont = new Font("Tahoma", Font.PLAIN, 16);
