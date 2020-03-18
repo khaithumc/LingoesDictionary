@@ -51,8 +51,8 @@ public class PanelCenter extends javax.swing.JPanel {
     private final char extendsionSeparator = '.';
     private String curWord;
     private final String pathToDocument = "/documents";
-//    private final String[] dictionaryNames;
     private Map<String, List<Word>> dictionaries;
+    private String curWordToHTML;
 
     public PanelCenter() {
         dictionaries = getAllDictionary();
@@ -181,7 +181,8 @@ public class PanelCenter extends javax.swing.JPanel {
             }
         });
         
-        epWordView.setText(htmlText.toString()); 
+        curWordToHTML = htmlText.toString();
+        epWordView.setText(curWordToHTML); 
         epWordView.setEditable(false);
         epWordView.setCaretPosition(0);
         epSelected = epWordView;
@@ -390,12 +391,9 @@ public class PanelCenter extends javax.swing.JPanel {
                     // if file existed -> change file name 
                     try {
                         if(saveFile.createNewFile()){
-                        // get value from JEditorPane in scpCenterCenter
-                        JEditorPane tmpEP = (JEditorPane) tmpComponent;
-
                         // add value into created file
                         FileWriter fileWriter = new FileWriter(saveFile);
-                        fileWriter.write(HTMLCodeUtils.convertToHTMLCodes(tmpEP.getText()));
+                        fileWriter.write(HTMLCodeUtils.convertToHTMLCodes(curWordToHTML));
                         fileWriter.close();
                         JOptionPane.showMessageDialog(null, "Word was saved");
                         } else {
