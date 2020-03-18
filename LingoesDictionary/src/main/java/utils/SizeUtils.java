@@ -27,4 +27,8 @@ public class SizeUtils {
     public static int getWidth(Component comp) {
         return (int) comp.getSize().getWidth();
     }
+    
+    public static int getHeight(Component comp) {
+        return (int) comp.getSize().getHeight();
+    }
 }

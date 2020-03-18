@@ -15,7 +15,13 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 import javax.swing.JButton;
@@ -33,8 +39,8 @@ public class HomepagePanel extends javax.swing.JPanel {
     private JSplitPane splitPane;
     private JButton[] btWords;
     
-    private List<Word> words;
-    private final String pathToDataFile = getClass().getResource("/documents/Dictionary.txt").getFile();
+    private List<String> vocabularies;
+    private final String pathToVocabularyFile = getClass().getResource("/documents/vocabulary_list.txt").getPath();
     private final int maximumWordLength = 200;
     private final Font wordFont = new Font("Tahoma", Font.PLAIN, 16);
     private int indexOfCurBtWord = 0;
@@ -46,9 +52,7 @@ public class HomepagePanel extends javax.swing.JPanel {
     public HomepagePanel(JSplitPane splitPane) {
         this.splitPane = splitPane;
         
-        WordDao wdao = new WordDaoImpl();
-        File file = new File(pathToDataFile);
-        words = wdao.getWords(file);
+        vocabularies = getVocabularies();
         initComponents();
         initComponentManuallys();
         
@@ -61,11 +65,11 @@ public class HomepagePanel extends javax.swing.JPanel {
         
         JButton tmpButton = new JButton("Word");
         heightOfBtWord = SizeUtils.getPreHeight(tmpButton);
-        verLengthOfPnWords = (tmpButton.getPreferredSize().height + 5) * words.size();
+        verLengthOfPnWords = (tmpButton.getPreferredSize().height + 5) * vocabularies.size();
         pnWords.setPreferredSize(new Dimension(pnWords.getPreferredSize().width, verLengthOfPnWords));
         
-        words.forEach((word) -> {
-            JButton btWord = new JButton(word.getVocabulary());
+        vocabularies.forEach((vocabulary) -> {
+            JButton btWord = new JButton(vocabulary);
             btWord.setPreferredSize(new Dimension(maximumWordLength, btWord.getPreferredSize().height));
             btWord.setName(indexOfCurBtWord + "");
             btWord.setBorder(null);
@@ -79,7 +83,7 @@ public class HomepagePanel extends javax.swing.JPanel {
             indexOfCurBtWord++;
             pnWords.add(btWord);
             
-            setEventBtWord(btWord, word);
+            setEventBtWord(btWord);
         });
         
         indexOfCurBtWord = 0;
@@ -120,7 +124,7 @@ public class HomepagePanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane scpWords;
     // End of variables declaration//GEN-END:variables
 
-    private void setEventBtWord(JButton btWord, Word word) {
+    private void setEventBtWord(JButton btWord) {
         btWord.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
@@ -131,16 +135,16 @@ public class HomepagePanel extends javax.swing.JPanel {
                 btWord.setForeground(clickedColor);
                 
                 PanelCenter pnCenter = (PanelCenter) splitPane.getRightComponent();
-                pnCenter.loadWord(word);
+                pnCenter.loadVocabulary(btWord.getText());
             }
         });
     }
 
     private JButton[] getBtWords() {
-        JButton[] btWords = new JButton[words.size()];
+        JButton[] btWords = new JButton[vocabularies.size()];
         Component[] tmp = pnWords.getComponents();
         
-        for(int i = 0; i < words.size(); i++) {
+        for(int i = 0; i < vocabularies.size(); i++) {
             btWords[i] = (JButton) tmp[i];
         }
         
@@ -176,5 +180,31 @@ public class HomepagePanel extends javax.swing.JPanel {
             PanelCenter pnCenterOfSplitPane = (PanelCenter) splitPane.getRightComponent();
             pnCenterOfSplitPane.loadNoResult();
         }
+    }
+    
+    private List<String> getVocabularies(){
+        List<String> vocabularies = new ArrayList<>();
+        
+        File file = new File(pathToVocabularyFile);
+        try{
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                    new FileInputStream(file), "UTF-8"));
+ 
+		String line;
+                
+		while ((line = in.readLine()) != null) {
+                    vocabularies.add(line);
+                }
+        } catch (UnsupportedEncodingException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch (IOException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        
+        return vocabularies;
     }
 }

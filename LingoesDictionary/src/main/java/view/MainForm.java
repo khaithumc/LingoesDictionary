@@ -289,6 +289,8 @@ public class MainForm extends javax.swing.JFrame {
                     pnLeft.searchWord(typingText, searchWordFunc);
                 }
                 
+                tfSearch.setText(typingText);
+                
                 // set indexOfCurWord to last index of word list
                 indexOfCurWord = cbbModel.getSize() - 1;
             }
@@ -331,6 +333,7 @@ public class MainForm extends javax.swing.JFrame {
                 pnLeft.activeBtHomepage();
                 String typingText = tfSearch.getText();
                 cbbModel.addElement(new WordAndIndex(typingText, pnLeft.searchWord(typingText, searchFullWordFunc)));
+                tfSearch.setText(typingText);
                 indexOfCurWord = cbbModel.getSize() - 1;
             }
         });

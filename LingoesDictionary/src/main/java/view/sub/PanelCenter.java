@@ -5,16 +5,22 @@
  */
 package view.sub;
 
+import dao.WordDao;
+import dao.WordDaoImpl;
 import entities.Word;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
@@ -41,13 +47,36 @@ public class PanelCenter extends javax.swing.JPanel {
     private static String translatorText;
     private final String noResultText = "<h1 style=\"color:red;font-size:20px;font-family:tahoma\"><b>KHÔNG CÓ TỪ NÀY TRONG TỪ ĐIỂN</b></h1>";
     private final String typeOfSaveFile = "html";
+    private final String htmlNullWord = "<i style=\"color:yellow;font-size:14px;font-family:tahoma\">Không có từ này trong từ điển</i>";
     private final char extendsionSeparator = '.';
-    private Word curWord;
+    private String curWord;
+    private final String pathToDocument = "/documents";
+//    private final String[] dictionaryNames;
+    private Map<String, List<Word>> dictionaries;
 
     public PanelCenter() {
+        dictionaries = getAllDictionary();
+        
         initComponents();
         initComponentManuallys();
         initEvents();
+        
+        // cài để khi mở app thì nút btStartHomepage sẽ thực hiện để hiển thị StartHomepagePanel
+        btStartPage.doClick();
+    }
+    
+    private Map<String, List<Word>> getAllDictionary(){
+        // lấy tất cả các file từ điển đang lưu trong documents/dictionary 
+        File[] files = new File(getClass().getResource("/documents/dictionary").getPath()).listFiles();
+        
+        // từ các file trên đọc dữ liệu và lưu vào dictionaries
+        Map<String, List<Word>> dicionaries = new LinkedHashMap<>();
+        WordDao wd = new WordDaoImpl();
+        Arrays.stream(files).forEach(file -> {
+            dicionaries.put(FilenameUtils.getBaseName(file.getName()), wd.getWords(file));
+        });
+        
+        return dicionaries;
     }
 
     private void initComponentManuallys() {
@@ -58,6 +87,8 @@ public class PanelCenter extends javax.swing.JPanel {
         btFind.setToolTipText("Tìm...");
         btTranslate.setToolTipText("Sử dụng chức năng dich đoạn văn bản");
         btStartPage.setToolTipText("Start Page");
+        
+        scpCenterCenter.getVerticalScrollBar().setUnitIncrement(16);
 
     }
 
@@ -133,19 +164,47 @@ public class PanelCenter extends javax.swing.JPanel {
         return this.scpCenterCenter;
     }
 
-    public void loadWord(Word word) {
+    public void loadVocabulary(String vocabulary){
+        Map<String, Word> searchedWords = searchWordInAllDictionary(vocabulary);
         JEditorPane epWordView = new JEditorPane();
+        epWordView.setName("Word_EditorPane");
         epWordView.setContentType("text/html");
-        epWordView.setText(word.toHTMLString());
-        epWordView.setBounds(0, 0, SizeUtils.getPreWidth(epWordView), SizeUtils.getPreHeight(epWordView));
+        
+        StringBuilder htmlText = new StringBuilder("<u style=\"color:red;font-size:22px;font-family:tahoma\"> TỪ: " + vocabulary.toUpperCase() + "</u>");
+        searchedWords.keySet().forEach(dictionaryName -> {
+            String htmlTitle = "<p style=\"font-size:16px;font-family:tahoma\">" + "Dịch theo tiếng: " + dictionaryName + "</p>";
+            htmlText.append(htmlTitle);
+            if(searchedWords.get(dictionaryName) != null){
+                htmlText.append(searchedWords.get(dictionaryName).toHTMLString());
+            } else {
+                htmlText.append(htmlNullWord);
+            }
+        });
+        
+        epWordView.setText(htmlText.toString()); 
         epWordView.setEditable(false);
         epWordView.setCaretPosition(0);
-
-        //-------------------------------
         epSelected = epWordView;
-        //------------------------------
-
         scpCenterCenter.setViewportView(epWordView);
+        
+        curWord = vocabulary;
+    }
+    
+    private Map<String, Word> searchWordInAllDictionary(String vocabulary){
+        Map<String, Word> result = new LinkedHashMap<>();
+        
+        dictionaries.keySet().forEach(dictionaryName -> {
+            Word tmpWord = null;
+            for(Word word : dictionaries.get(dictionaryName)){
+                if(word.getVocabulary().equals(vocabulary)){
+                    tmpWord = word;
+                    break;
+                }
+            }
+            result.put(dictionaryName, tmpWord);
+        });
+        
+        return result;
     }
     
      public void showHTMLFile(String path){
@@ -161,14 +220,13 @@ public class PanelCenter extends javax.swing.JPanel {
     }
 
     private void initBtStartPageEvents() {
-        btStartPage.addMouseListener(new MouseAdapter() {
+        btStartPage.addActionListener(new ActionListener() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void actionPerformed(ActionEvent arg0) {
                 StartPagePanel pnStartPage = new StartPagePanel();
                 scpCenterCenter.setViewportView(pnStartPage);
                 scpCenterCenter.revalidate();
             }
-
         });
     }
 
@@ -312,13 +370,12 @@ public class PanelCenter extends javax.swing.JPanel {
                     return;
                 }
                 
-                
                 // show saveDialog and get Path to save file
                 JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
                 FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("HTML file (*.html)", typeOfSaveFile);
                 fileChooser.addChoosableFileFilter(extensionFilter);
                 fileChooser.setFileFilter(extensionFilter);
-                fileChooser.setSelectedFile(new File(curWord.getVocabulary() + extendsionSeparator + typeOfSaveFile));
+                fileChooser.setSelectedFile(new File(curWord + extendsionSeparator + typeOfSaveFile));
 
                 String pathToSave = "";
                 int selection = fileChooser.showSaveDialog(null);
@@ -338,7 +395,7 @@ public class PanelCenter extends javax.swing.JPanel {
 
                         // add value into created file
                         FileWriter fileWriter = new FileWriter(saveFile);
-                        fileWriter.write(HTMLCodeUtils.convertToHTMLCodes(curWord.toHTMLString()));
+                        fileWriter.write(HTMLCodeUtils.convertToHTMLCodes(tmpEP.getText()));
                         fileWriter.close();
                         JOptionPane.showMessageDialog(null, "Word was saved");
                         } else {
@@ -366,5 +423,9 @@ public class PanelCenter extends javax.swing.JPanel {
         } while (validFileName.contains(extendsionSeparator + ""));
         
         return parentPath + File.separator + validFileName + extendsionSeparator + typeOfSaveFile;
+    }
+    
+    private void getAllSize(Component com){
+        System.out.println("Size: " + com.getSize().width + ", " + com.getSize().height + " PreSize: " + com.getPreferredSize().width + ", " + com.getPreferredSize().height);
     }
 }

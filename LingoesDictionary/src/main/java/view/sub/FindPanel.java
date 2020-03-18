@@ -5,16 +5,9 @@
  */
 package view.sub;
 
-import dao.WordDao;
-import dao.WordDaoImpl;
-import entities.Word;
 import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.util.List;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.*;
 import javax.swing.text.Document;
@@ -35,6 +28,7 @@ public class FindPanel extends javax.swing.JFrame {
         this.textComp = textComp;
         initComponents();
         initTfSearchEvents();
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     class MyHightlightPainter extends DefaultHighlighter.DefaultHighlightPainter {

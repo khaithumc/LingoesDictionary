@@ -9,16 +9,11 @@ import java.util.Objects;
  */
 public class Word {
     private String vocabulary;
-    private String pronounce;
     private List<TypeOfWord> typeOfWords;
     private String sameWord;
 
     public void setSameWord(String sameWord) {
         this.sameWord = sameWord;
-    }
-
-    public void setPronounce(String pronounce) {
-        this.pronounce = pronounce;
     }
 
     public void setTypeOfWord(List<TypeOfWord> typeOfWords) {
@@ -33,10 +28,6 @@ public class Word {
         return sameWord;
     }
 
-    public String getPronounce() {
-        return pronounce;
-    }
-
     public List<TypeOfWord> getTypeOfWords() {
         return typeOfWords;
     }
@@ -48,9 +39,8 @@ public class Word {
     public Word() {
     }
     
-    public Word(String vocabulary, String pronounce, List<TypeOfWord> typeOfWords, String sameWord) {
+    public Word(String vocabulary, List<TypeOfWord> typeOfWords, String sameWord) {
         this.vocabulary = vocabulary;
-        this.pronounce = pronounce;
         this.typeOfWords = typeOfWords;
         this.sameWord = sameWord;
     }
@@ -62,16 +52,27 @@ public class Word {
 
     @Override
     public String toString() {
-        return "Từ: " + this.vocabulary + ", phát âm: " + this.vocabulary + ", từ đồng nghĩa: " + this.sameWord;
+        StringBuilder tmp = new StringBuilder();
+        tmp.append("Từ: ").append(this.vocabulary).append("\n");
+        if(this.sameWord != null){
+            tmp.append("* Từ đồng nghĩa: ").append(this.sameWord).append("\n");
+        } 
+        if(typeOfWords != null){
+            typeOfWords.forEach(typeOfWord -> tmp.append(typeOfWord));
+        }
+        
+        return tmp.toString();
     }
     
     public String toHTMLString(){
         StringBuilder tmp = new StringBuilder();
-        tmp.append("<p style=\"color:blue;font-size:20px;font-family:tahoma\"><b>Từ: ").append(vocabulary).append("</b> <i>").append(pronounce).append("</i></p>");
+//        tmp.append("<p style=\"color:blue;font-size:20px;font-family:tahoma\"><b>Từ: ").append(vocabulary).append("</b></p>");
         if(sameWord != null){
-            tmp.append("<p style=\"font-size:14px;font-family:tahoma\">Viết cách khác: ").append(sameWord).append("</p>");
+            tmp.append("<p style=\"color:green;font-size:14px;font-family:tahoma\">* Xem từ đồng nghĩa: ").append(sameWord).append("</p>");
         }
-        typeOfWords.forEach(type -> tmp.append(type.toHTMLString()));
+        if(typeOfWords != null){
+            typeOfWords.forEach(type -> tmp.append(type.toHTMLString()));
+        }
         
         return tmp.toString();
     }
