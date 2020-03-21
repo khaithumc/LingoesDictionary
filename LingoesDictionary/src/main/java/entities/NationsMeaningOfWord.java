@@ -11,14 +11,14 @@ import java.util.Objects;
  *
  * @author huyvi
  */
-public class MeaningOfWord {
+public class NationsMeaningOfWord {
     private String description;
     private String meaning;
 
-    public MeaningOfWord() {
+    public NationsMeaningOfWord() {
     }
 
-    public MeaningOfWord(String description, String meaning) {
+    public NationsMeaningOfWord(String description, String meaning) {
         this.description = description;
         this.meaning = meaning;
     }
@@ -49,7 +49,7 @@ public class MeaningOfWord {
             return false;
         }
         
-        MeaningOfWord tmp = (MeaningOfWord) obj;
+        NationsMeaningOfWord tmp = (NationsMeaningOfWord) obj;
         
         return tmp.meaning.equals(this.meaning);
     }

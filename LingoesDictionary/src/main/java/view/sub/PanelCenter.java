@@ -7,6 +7,8 @@ package view.sub;
 
 import dao.WordDao;
 import dao.WordDaoImpl;
+import entities.DictionaryEnum;
+import entities.NationsWord;
 import entities.Word;
 import java.awt.Color;
 import java.awt.Component;
@@ -50,12 +52,19 @@ public class PanelCenter extends javax.swing.JPanel {
     private final String htmlNullWord = "<i style=\"color:yellow;font-size:14px;font-family:tahoma\">Không có từ này trong từ điển</i>";
     private final char extendsionSeparator = '.';
     private String curWord;
-    private final String pathToDocument = "/documents";
     private Map<String, List<Word>> dictionaries;
     private String curWordToHTML;
+    private final String onlyEVDicFileName = "OnlyEVDictionary.txt";
 
-    public PanelCenter() {
-        dictionaries = getAllDictionary();
+    private DictionaryEnum dicEnum;
+    // mặc định là mở từ điển Anh-Việt
+    public PanelCenter(){
+        this(DictionaryEnum.ONLY_EN_VI);
+    }
+    
+    public PanelCenter(DictionaryEnum dicEnum) {
+        this.dicEnum = dicEnum;
+        loadDictionariesData();
         
         initComponents();
         initComponentManuallys();
@@ -65,18 +74,21 @@ public class PanelCenter extends javax.swing.JPanel {
         btStartPage.doClick();
     }
     
-    private Map<String, List<Word>> getAllDictionary(){
-        // lấy tất cả các file từ điển đang lưu trong documents/dictionary 
-        File[] files = new File(getClass().getResource("/documents/dictionary").getPath()).listFiles();
-        
-        // từ các file trên đọc dữ liệu và lưu vào dictionaries
-        Map<String, List<Word>> dicionaries = new LinkedHashMap<>();
+    private void loadDictionariesData(){
+        dictionaries = new LinkedHashMap<>();
         WordDao wd = new WordDaoImpl();
-        Arrays.stream(files).forEach(file -> {
-            dicionaries.put(FilenameUtils.getBaseName(file.getName()), wd.getWords(file));
-        });
-        
-        return dicionaries;
+
+        if(dicEnum == DictionaryEnum.ONLY_EN_VI){
+            dictionaries.put(FilenameUtils.getBaseName(onlyEVDicFileName), wd.getWords(dicEnum, onlyEVDicFileName));
+        } else {
+            // lấy tất cả các file từ điển đang lưu trong documents/dictionary 
+            File[] files = new File(getClass().getResource("/documents/en_nations").getPath()).listFiles();
+
+            // từ các file trên đọc dữ liệu và lưu vào dictionaries
+            Arrays.stream(files).forEach(file -> {
+                dictionaries.put(FilenameUtils.getBaseName(file.getName()), wd.getWords(dicEnum, file.getName()));
+            });
+        }
     }
 
     private void initComponentManuallys() {
@@ -109,7 +121,6 @@ public class PanelCenter extends javax.swing.JPanel {
                 scpCenterCenter.setViewportView(translatorPanel);
                 scpCenterCenter.revalidate();
             }
-
         });
     }
 
@@ -130,7 +141,6 @@ public class PanelCenter extends javax.swing.JPanel {
                         button.setContentAreaFilled(false);
                         button.setBorder(null);
                     }
-
                 });
             }
         }
@@ -160,35 +170,49 @@ public class PanelCenter extends javax.swing.JPanel {
         translatorText = s;
     }
 
-    public JScrollPane getScpCenterCenter() {
-        return this.scpCenterCenter;
-    }
-
-    public void loadVocabulary(String vocabulary){
-        Map<String, Word> searchedWords = searchWordInAllDictionary(vocabulary);
+    public void loadVocabulary(String vocabulary, DictionaryEnum dicEnum){
+        if(this.dicEnum != dicEnum){
+            this.dicEnum = dicEnum;
+            loadDictionariesData();
+        }
+        curWord = vocabulary;
+        
         JEditorPane epWordView = new JEditorPane();
         epWordView.setName("Word_EditorPane");
         epWordView.setContentType("text/html");
+        epWordView.setEditable(false);
+        StringBuilder htmlText = new StringBuilder(); 
+
+        if(dicEnum == DictionaryEnum.EN_NATIONS){
+            Map<String, Word> searchedWords = searchWordInAllDictionary(vocabulary);
+            htmlText.append("<u style=\"color:red;font-size:22px;font-family:tahoma\"> TỪ: ").append(vocabulary.toUpperCase()).append("</u>");
+            searchedWords.keySet().forEach(dictionaryName -> {
+                String htmlTitle = "<p style=\"font-size:16px;font-family:tahoma\">" + "Dịch theo tiếng: " + dictionaryName + "</p>";
+                htmlText.append(htmlTitle);
+                if(searchedWords.get(dictionaryName) != null){
+                    htmlText.append(searchedWords.get(dictionaryName).toHTMLString());
+                } else {
+                    htmlText.append(htmlNullWord);
+                }
+            });
+        } else {
+            // tra từ trong list từ đã tạo
+            dictionaries.keySet().forEach(dictionaryName -> {
+                for(Word tmpWord : dictionaries.get(dictionaryName)){
+                    if(tmpWord.getVocabulary().equalsIgnoreCase(vocabulary)){
+                        htmlText.append(tmpWord.toHTMLString());
+                        break;
+                    }
+                }
+            });
+        }
         
-        StringBuilder htmlText = new StringBuilder("<u style=\"color:red;font-size:22px;font-family:tahoma\"> TỪ: " + vocabulary.toUpperCase() + "</u>");
-        searchedWords.keySet().forEach(dictionaryName -> {
-            String htmlTitle = "<p style=\"font-size:16px;font-family:tahoma\">" + "Dịch theo tiếng: " + dictionaryName + "</p>";
-            htmlText.append(htmlTitle);
-            if(searchedWords.get(dictionaryName) != null){
-                htmlText.append(searchedWords.get(dictionaryName).toHTMLString());
-            } else {
-                htmlText.append(htmlNullWord);
-            }
-        });
-        
+        epSelected = epWordView;
         curWordToHTML = htmlText.toString();
         epWordView.setText(curWordToHTML); 
-        epWordView.setEditable(false);
         epWordView.setCaretPosition(0);
-        epSelected = epWordView;
-        scpCenterCenter.setViewportView(epWordView);
         
-        curWord = vocabulary;
+        scpCenterCenter.setViewportView(epWordView);
     }
     
     private Map<String, Word> searchWordInAllDictionary(String vocabulary){
@@ -221,13 +245,10 @@ public class PanelCenter extends javax.swing.JPanel {
     }
 
     private void initBtStartPageEvents() {
-        btStartPage.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                StartPagePanel pnStartPage = new StartPagePanel();
-                scpCenterCenter.setViewportView(pnStartPage);
-                scpCenterCenter.revalidate();
-            }
+        btStartPage.addActionListener((ActionEvent arg0) -> {
+            StartPagePanel pnStartPage = new StartPagePanel();
+            scpCenterCenter.setViewportView(pnStartPage);
+            scpCenterCenter.revalidate();
         });
     }
 
@@ -421,9 +442,5 @@ public class PanelCenter extends javax.swing.JPanel {
         } while (validFileName.contains(extendsionSeparator + ""));
         
         return parentPath + File.separator + validFileName + extendsionSeparator + typeOfSaveFile;
-    }
-    
-    private void getAllSize(Component com){
-        System.out.println("Size: " + com.getSize().width + ", " + com.getSize().height + " PreSize: " + com.getPreferredSize().width + ", " + com.getPreferredSize().height);
     }
 }

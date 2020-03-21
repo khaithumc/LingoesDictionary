@@ -5,6 +5,8 @@
  */
 package view.sub;
 
+import entities.DictionaryEnum;
+import entities.WordAndIndex;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -12,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.function.BiPredicate;
 import javax.swing.BorderFactory;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JSplitPane;
 import javax.swing.border.Border;
@@ -34,10 +38,12 @@ public class PanelLeft extends javax.swing.JPanel {
     private final Border pnLeftButtonHighLightBorder = BorderFactory
             .createCompoundBorder(new LineBorder(new Color(153,153,153), 1), new LineBorder(Color.WHITE, 5));
     private final String homepageKey = getClass().getResource("/pictures/icon-homepage-16px.png").toString();
+    private DefaultComboBoxModel<WordAndIndex> cbbModelOfMainForm;
     
-    public PanelLeft(JSplitPane splitPane) {
+    public PanelLeft(JSplitPane splitPane, DefaultComboBoxModel<WordAndIndex> cbbModel) {
         this.splitPane = splitPane;
         this.splitPane.setEnabled(false);
+        this.cbbModelOfMainForm = cbbModel;
         
         initComponents();
         initComponentManuallys();
@@ -48,7 +54,7 @@ public class PanelLeft extends javax.swing.JPanel {
         pnLeftCenter.setLayout(cardLayout);
         
         homepagePanel = new HomepagePanel(splitPane);
-        settingPanel = new SettingPanel();
+        settingPanel = new SettingPanel(this);
         addendumPanel = new AddendumPanel(splitPane);
         
         btHomepage.setBorder(pnLeftButtonHighLightBorder);
@@ -115,6 +121,12 @@ public class PanelLeft extends javax.swing.JPanel {
     
     public void showWordAtIndex(int index){
         homepagePanel.showWordAtIndex(index);
+    }
+    
+    public void setNewDictionary(){
+        if(homepagePanel.setNewDictionary()){
+            cbbModelOfMainForm.removeAllElements();
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.

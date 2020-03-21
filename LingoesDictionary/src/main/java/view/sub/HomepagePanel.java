@@ -5,16 +5,13 @@
  */
 package view.sub;
 
-import dao.WordDao;
-import dao.WordDaoImpl;
-import entities.Word;
+import entities.DictionaryEnum;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 import utils.SizeUtils;
@@ -40,26 +38,30 @@ public class HomepagePanel extends javax.swing.JPanel {
     private JButton[] btWords;
     
     private List<String> vocabularies;
-    private final String pathToVocabularyFile = getClass().getResource("/documents/vocabulary_list.txt").getPath();
     private final int maximumWordLength = 200;
-    private final Font wordFont = new Font("Tahoma", Font.PLAIN, 16);
     private int indexOfCurBtWord = 0;
     private final Color normalColor = Color.BLACK;
     private final Color clickedColor = Color.LIGHT_GRAY;
     private int verLengthOfPnWords;
     private int heightOfBtWord;
+    private DictionaryEnum dicEnum;
     
-    public HomepagePanel(JSplitPane splitPane) {
+    public HomepagePanel(JSplitPane splitPane){
+        this(DictionaryEnum.ONLY_EN_VI, splitPane);
+    }
+    
+    public HomepagePanel(DictionaryEnum dicEnum , JSplitPane splitPane) {
         this.splitPane = splitPane;
+        this.dicEnum = dicEnum;
         
-        vocabularies = getVocabularies();
         initComponents();
         initComponentManuallys();
         
-        btWords = getBtWords();
     }
     
     private void initComponentManuallys() {
+        indexOfCurBtWord = 0;
+        vocabularies = getVocabularies();
         scpWords.getVerticalScrollBar().setUnitIncrement(16);
         pnCenter = new PanelCenter();
         
@@ -87,6 +89,7 @@ public class HomepagePanel extends javax.swing.JPanel {
         });
         
         indexOfCurBtWord = 0;
+        btWords = getBtWords();
     }
 
     /**
@@ -103,6 +106,7 @@ public class HomepagePanel extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
 
+        pnWords.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 30, 1, 1));
         pnWords.setMinimumSize(new java.awt.Dimension(100, 100));
         scpWords.setViewportView(pnWords);
 
@@ -125,18 +129,13 @@ public class HomepagePanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void setEventBtWord(JButton btWord) {
-        btWord.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                pnCenter.setLbWord(btWord.getText());
-                
-                btWords[indexOfCurBtWord].setForeground(normalColor);
-                indexOfCurBtWord = Integer.parseInt(btWord.getName());
-                btWord.setForeground(clickedColor);
-                
-                PanelCenter pnCenter = (PanelCenter) splitPane.getRightComponent();
-                pnCenter.loadVocabulary(btWord.getText());
-            }
+        btWord.addActionListener((ActionEvent arg0) -> {
+            pnCenter.setLbWord(btWord.getText());
+            btWords[indexOfCurBtWord].setForeground(normalColor);
+            indexOfCurBtWord = Integer.parseInt(btWord.getName());
+            btWord.setForeground(clickedColor);
+            PanelCenter tmpPnCenter = (PanelCenter) splitPane.getRightComponent();
+            tmpPnCenter.loadVocabulary(btWord.getText(), dicEnum);
         });
     }
 
@@ -184,8 +183,7 @@ public class HomepagePanel extends javax.swing.JPanel {
     
     private List<String> getVocabularies(){
         List<String> vocabularies = new ArrayList<>();
-        
-        File file = new File(pathToVocabularyFile);
+        File file = new File(dicEnum.getVocabularyPath());
         try{
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
@@ -206,5 +204,26 @@ public class HomepagePanel extends javax.swing.JPanel {
         }
         
         return vocabularies;
+    }
+    
+    public boolean setNewDictionary(){
+        DictionaryEnum choosenDicEnum = (DictionaryEnum) JOptionPane.showInputDialog(this, "Chọn từ điển mà bạn muốn", "Cài đặt bộ từ điển", JOptionPane.PLAIN_MESSAGE, null, DictionaryEnum.values(), dicEnum);
+        if(choosenDicEnum == null){
+            return false;
+        }
+        
+        if(this.dicEnum == choosenDicEnum){
+            JOptionPane.showMessageDialog(this, "Từ điển đang được sử dụng");
+            setNewDictionary();
+        } else {
+            this.dicEnum = choosenDicEnum;
+            pnWords.removeAll();
+            initComponentManuallys();
+            pnWords.revalidate();
+            JOptionPane.showMessageDialog(this, "Đã thay đổi từ điển");
+            return true;
+        }
+        
+        return false;
     }
 }

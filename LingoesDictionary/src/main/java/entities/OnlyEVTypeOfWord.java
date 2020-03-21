@@ -12,19 +12,19 @@ import java.util.Objects;
  *
  * @author huyvi
  */
-public class TypeOfWord {
+public class OnlyEVTypeOfWord {
     private String type;
-    private List<MeaningOfWord> means;
+    private List<OnlyEVMeaningOfWord> means;
 
-    public TypeOfWord() {
+    public OnlyEVTypeOfWord() {
     }
 
-    public TypeOfWord(String type, List<MeaningOfWord> means) {
+    public OnlyEVTypeOfWord(String type, List<OnlyEVMeaningOfWord> means) {
         this.type = type;
         this.means = means;
     }
 
-    public List<MeaningOfWord> getMeans() {
+    public List<OnlyEVMeaningOfWord> getMeans() {
         return means;
     }
 
@@ -32,7 +32,7 @@ public class TypeOfWord {
         return type;
     }
 
-    public void setMeans(List<MeaningOfWord> means) {
+    public void setMeans(List<OnlyEVMeaningOfWord> means) {
         this.means = means;
     }
 
@@ -50,7 +50,7 @@ public class TypeOfWord {
             return false;
         }
         
-        TypeOfWord tmp = (TypeOfWord) obj;
+        OnlyEVTypeOfWord tmp = (OnlyEVTypeOfWord) obj;
         
         return tmp.getMeans() == this.means;
     }
@@ -63,15 +63,15 @@ public class TypeOfWord {
     @Override
     public String toString() {
         StringBuilder tmp = new StringBuilder();
-        tmp.append("* Từ loại: ").append(this.type).append("\n");
-        means.forEach(mow -> tmp.append(mow));
+        tmp.append("Từ loại: ").append(this.type).append("\n");
+        means.forEach(mow -> tmp.append(mow.toString()));
         
         return tmp.toString();
     }
     
     public String toHTMLString(){
         StringBuilder tmp = new StringBuilder();
-        tmp.append("<p style=\"color:blue;font-size:14px;font-family:tahoma\"><b>* Từ loại: </b>").append(this.type).append("</p>");
+        tmp.append("<p style=\"color:red;font-size:16px;font-family:tahoma\"><b>Từ loại:</b>").append(this.type).append("</p>");
         means.forEach(mow -> tmp.append(mow.toHTMLString()));
         
         return tmp.toString();

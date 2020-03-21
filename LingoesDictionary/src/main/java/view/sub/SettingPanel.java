@@ -5,6 +5,11 @@
  */
 package view.sub;
 
+import entities.DictionaryEnum;
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 /**
  *
  * @author USER
@@ -14,8 +19,11 @@ public class SettingPanel extends javax.swing.JPanel {
     /**
      * Creates new form SettingPanel
      */
-    public SettingPanel() {
+    private PanelLeft pnLeft;
+    public SettingPanel(PanelLeft panelLeft) {
+        this.pnLeft = panelLeft;
         initComponents();
+        initEvents();
     }
 
     /**
@@ -27,32 +35,63 @@ public class SettingPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lbLanguageSetting = new javax.swing.JLabel();
+        lbWebSearchSetting = new javax.swing.JLabel();
+        lbDictionaryKindSetting = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setText("TÙY CHỈNH");
+        lbLanguageSetting.setText("Cài đặt ngôn ngữ ứng dụng");
+
+        lbWebSearchSetting.setText("Cài đặt WebSearch");
+
+        lbDictionaryKindSetting.setText("Cài đặt bộ từ điển ứng dụng");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(145, 145, 145)
-                .addComponent(jLabel1)
-                .addContainerGap(192, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbDictionaryKindSetting, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbLanguageSetting)
+                            .addComponent(lbWebSearchSetting))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jLabel1)
-                .addContainerGap(257, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(lbLanguageSetting)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbWebSearchSetting)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbDictionaryKindSetting)
+                .addContainerGap(233, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lbDictionaryKindSetting;
+    private javax.swing.JLabel lbLanguageSetting;
+    private javax.swing.JLabel lbWebSearchSetting;
     // End of variables declaration//GEN-END:variables
+
+    private void initEvents() {
+        //
+        lbDictionaryKindSetting.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                lbLanguageSetting.setForeground(Color.BLACK);
+                lbWebSearchSetting.setForeground(Color.BLACK);
+                lbDictionaryKindSetting.setForeground(Color.LIGHT_GRAY);
+                pnLeft.setNewDictionary();
+            }
+        });
+    }
 }

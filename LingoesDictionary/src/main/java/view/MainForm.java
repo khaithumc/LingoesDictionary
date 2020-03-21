@@ -26,6 +26,7 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.plaf.metal.MetalLookAndFeel;
+import utils.ImageUtils;
 import utils.MyDefaultMetalTheme;
 import view.sub.PanelCenter;
 import view.sub.PanelLeft;
@@ -37,7 +38,7 @@ import view.sub.PanelLeft;
 public class MainForm extends javax.swing.JFrame {
     private int indexOfCurWord;
     private final Container container = getContentPane();
-    private String ICON_PATH = getClass().getResource("/pictures/icon-lingoes-16px.jpg").getPath();
+    private final String ICON_PATH = getClass().getResource("/pictures/icon-lingoes-16px.jpg").getPath();
     private final BiPredicate<String, String> searchWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.startsWith(s2);
     private final BiPredicate<String, String> searchFullWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.equalsIgnoreCase(s2);
     private final Font normalWordFont = new Font("Tahoma", Font.PLAIN, 16);
@@ -202,18 +203,24 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void initComponentManuallys() {
+        setIconImage(ImageUtils.load(ICON_PATH));
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);
         setSize(800, 500);
         setTitle("Lingoes");
+        
+        // init cbbSearch
+        cbbModel = new DefaultComboBoxModel<>();
+        cbbSearch.setModel(cbbModel);
+        
         splitPane.setOneTouchExpandable(true);
         splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setForeground(new Color(204,204,204));
         splitPane.setBorder(border);
 
         pnCenter = new PanelCenter();
-        pnLeft = new PanelLeft(splitPane);
+        pnLeft = new PanelLeft(splitPane, cbbModel);
 
         splitPane.add(pnLeft, JSplitPane.LEFT);
         splitPane.add(pnCenter, JSplitPane.RIGHT);
@@ -221,12 +228,6 @@ public class MainForm extends javax.swing.JFrame {
         container.add(splitPane, BorderLayout.CENTER);
 
         initTitleBar();
-        
-        // init cbbSearch
-        cbbModel = new DefaultComboBoxModel<>();
-        cbbSearch.setModel(cbbModel);
-        
-        
         
         // init tfSearch
         tfSearch = (JTextField) cbbSearch.getEditor().getEditorComponent();
