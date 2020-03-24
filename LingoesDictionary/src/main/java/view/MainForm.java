@@ -9,12 +9,17 @@ import entities.WordAndIndex;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
 import java.util.function.BiPredicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRootPane;
 import javax.swing.JSplitPane;
@@ -72,13 +77,18 @@ public class MainForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField1 = new javax.swing.JTextField();
         pnTop = new javax.swing.JPanel();
         btSearch = new javax.swing.JButton();
         btBack = new javax.swing.JButton();
         btNext = new javax.swing.JButton();
         cbbSearch = new javax.swing.JComboBox<>();
+        tfWebSearch = new javax.swing.JTextField();
+        btWebSearch = new javax.swing.JButton();
         pnBottom = new javax.swing.JPanel();
         lbFooter = new javax.swing.JLabel();
+
+        jTextField1.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LINGOES");
@@ -105,6 +115,12 @@ public class MainForm extends javax.swing.JFrame {
         cbbSearch.setToolTipText("");
         cbbSearch.setBorder(null);
 
+        tfWebSearch.setText("google");
+
+        btWebSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pictures/icon-websearch-16px.png"))); // NOI18N
+        btWebSearch.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        btWebSearch.setFocusPainted(false);
+
         javax.swing.GroupLayout pnTopLayout = new javax.swing.GroupLayout(pnTop);
         pnTop.setLayout(pnTopLayout);
         pnTopLayout.setHorizontalGroup(
@@ -115,25 +131,33 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(2, 2, 2)
                 .addComponent(btNext, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbbSearch, 0, 294, Short.MAX_VALUE)
+                .addComponent(cbbSearch, 0, 57, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfWebSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btWebSearch)
                 .addGap(10, 10, 10))
         );
+
+        pnTopLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btSearch, btWebSearch});
+
         pnTopLayout.setVerticalGroup(
             pnTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTopLayout.createSequentialGroup()
-                .addGroup(pnTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btNext, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btBack, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(pnTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btNext, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btBack, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfWebSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btWebSearch))
+                    .addComponent(cbbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnTopLayout.createSequentialGroup()
-                .addComponent(cbbSearch)
-                .addGap(11, 11, 11))
         );
 
-        pnTopLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btBack, btNext, btSearch});
+        pnTopLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btBack, btNext, btSearch, btWebSearch, cbbSearch, tfWebSearch});
 
         getContentPane().add(pnTop, java.awt.BorderLayout.PAGE_START);
 
@@ -251,10 +275,13 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton btBack;
     private javax.swing.JButton btNext;
     private javax.swing.JButton btSearch;
+    private javax.swing.JButton btWebSearch;
     private javax.swing.JComboBox<WordAndIndex> cbbSearch;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbFooter;
     private javax.swing.JPanel pnBottom;
     private javax.swing.JPanel pnTop;
+    private javax.swing.JTextField tfWebSearch;
     // End of variables declaration//GEN-END:variables
 
     private void initEvents() {
@@ -262,6 +289,35 @@ public class MainForm extends javax.swing.JFrame {
         initBtBackEvents();
         initBtNextEvents();
         initBtSearchEvents();
+        initWebSearchEvents();
+    }
+    
+    private void initWebSearchEvents() {
+        btWebSearch.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                getURLToBrowser();
+            }
+            
+        });
+        tfWebSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    getURLToBrowser();
+                }
+            }
+            
+        });
+    }
+    
+    private void getURLToBrowser() {
+        String a = tfWebSearch.getText();
+        try {
+            Desktop.getDesktop().browse(URI.create("http://www.google.com/search?h1=en&q="+a+"&btnG=Google+Search"));
+        } catch (IOException ex) {
+            Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void initTfSearchEvents() {
