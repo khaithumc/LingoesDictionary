@@ -336,7 +336,7 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     private void initBrowsers() {
-        String s = tfWebSearch.getText();
+        String s = tfWebSearch.getText().replace(" ", "%20");
         String google = "https://www.google.com/search?q=" + s + "&hl=vi";
         String bing = "https://www.bing.com/search?q=" + s;
         String yahoo = "https://search.yahoo.com/search?p=" + s + "&ei=UTF-8";
