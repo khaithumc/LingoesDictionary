@@ -14,6 +14,7 @@ import entities.OnlyEVTypeOfWord;
 import entities.OnlyEVWord;
 import entities.Word;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,7 +38,7 @@ public class WordDaoImpl implements WordDao{
         try {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
-                    new FileInputStream(dicEnum.getPath() + filename), "UTF-8"));
+                    new FileInputStream(dicEnum.getPath() + File.separator + filename), "UTF-8"));
  
 		String line;
                 

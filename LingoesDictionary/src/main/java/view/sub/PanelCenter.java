@@ -8,7 +8,6 @@ package view.sub;
 import dao.WordDao;
 import dao.WordDaoImpl;
 import entities.DictionaryEnum;
-import entities.NationsWord;
 import entities.Word;
 import java.awt.Color;
 import java.awt.Component;
@@ -16,13 +15,13 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,6 @@ import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
@@ -48,23 +46,16 @@ public class PanelCenter extends javax.swing.JPanel {
 
     private static JEditorPane epSelected = new JEditorPane();
     private static String voiceWord;
-    private static String translatorText;
     private final String noResultText = "<h1 style=\"color:red;font-size:20px;font-family:tahoma\"><b>KHÔNG CÓ TỪ NÀY TRONG TỪ ĐIỂN</b></h1>";
     private final String typeOfSaveFile = "html";
     private final String htmlNullWord = "<i style=\"color:yellow;font-size:14px;font-family:tahoma\">Không có từ này trong từ điển</i>";
     private final char extendsionSeparator = '.';
     private String curWord;
-    private Map<String, List<Word>> dictionaries;
+    private Map<DictionaryEnum, Map<String, List<Word>>> dictionarySets;
     private String curWordToHTML;
-    private final String onlyEVDicFileName = "OnlyEVDictionary.txt";
     final Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
 
     private DictionaryEnum dicEnum;
-
-    // mặc định là mở từ điển Anh-Việt
-    public PanelCenter() {
-        this(DictionaryEnum.ONLY_EN_VI);
-    }
 
     public PanelCenter(DictionaryEnum dicEnum) {
         this.dicEnum = dicEnum;
@@ -79,20 +70,15 @@ public class PanelCenter extends javax.swing.JPanel {
     }
 
     private void loadDictionariesData() {
-        dictionaries = new LinkedHashMap<>();
+        dictionarySets = new HashMap<>();
+        Map<String, List<Word>> dictionaries = new HashMap<>();
         WordDao wd = new WordDaoImpl();
-
-        if (dicEnum == DictionaryEnum.ONLY_EN_VI) {
-            dictionaries.put(FilenameUtils.getBaseName(onlyEVDicFileName), wd.getWords(dicEnum, onlyEVDicFileName));
-        } else {
-            // lấy tất cả các file từ điển đang lưu trong documents/dictionary 
-            File[] files = new File(getClass().getResource("/documents/en_nations").getPath()).listFiles();
-
-            // từ các file trên đọc dữ liệu và lưu vào dictionaries
-            Arrays.stream(files).forEach(file -> {
-                dictionaries.put(FilenameUtils.getBaseName(file.getName()), wd.getWords(dicEnum, file.getName()));
-            });
-        }
+        
+        File[] files = new File(dicEnum.getPath()).listFiles();
+        Arrays.stream(files).forEach(file -> {
+            dictionaries.put(FilenameUtils.getBaseName(file.getName()), wd.getWords(dicEnum, file.getName()));
+        });
+        dictionarySets.put(dicEnum, dictionaries);
     }
 
     private void initComponentManuallys() {
@@ -105,7 +91,6 @@ public class PanelCenter extends javax.swing.JPanel {
         btStartPage.setToolTipText("Start Page");
 
         scpCenterCenter.getVerticalScrollBar().setUnitIncrement(16);
-
     }
 
     private void initEvents() {
@@ -122,12 +107,13 @@ public class PanelCenter extends javax.swing.JPanel {
         btTranslate.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                TranslatorPanel translatorPanel = new TranslatorPanel();
+                TranslatorPanel translatorPanel = new TranslatorPanel(dicEnum);
                 scpCenterCenter.setViewportView(translatorPanel);
                 scpCenterCenter.revalidate();
             }
         });
     }
+    
      private void initBtCopyEvents() {
         btCopy.addMouseListener(new MouseAdapter() {
             @Override
@@ -139,7 +125,6 @@ public class PanelCenter extends javax.swing.JPanel {
 
         });
     }
-    
 
     private void initPnTopButtonEvents() {
         final Component[] components = pnCenterTop.getComponents();
@@ -181,41 +166,35 @@ public class PanelCenter extends javax.swing.JPanel {
         voiceWord = s;
     }
 
-    public void loadVocabulary(String vocabulary, DictionaryEnum dicEnum) {
-        if (this.dicEnum != dicEnum) {
-            this.dicEnum = dicEnum;
-            loadDictionariesData();
-        }
+    public void loadVocabulary(String vocabulary) {
+        loadDictionariesData();
         curWord = vocabulary;
 
         JEditorPane epWordView = new JEditorPane();
         epWordView.setName("Word_EditorPane");
         epWordView.setContentType("text/html");
         epWordView.setEditable(false);
+        
         StringBuilder htmlText = new StringBuilder();
-
-        if (dicEnum == DictionaryEnum.EN_NATIONS) {
-            Map<String, Word> searchedWords = searchWordInAllDictionary(vocabulary);
-            htmlText.append("<u style=\"color:red;font-size:22px;font-family:tahoma\"> TỪ: ").append(vocabulary.toUpperCase()).append("</u>");
-            searchedWords.keySet().forEach(dictionaryName -> {
-                String htmlTitle = "<p style=\"font-size:16px;font-family:tahoma\">" + "Dịch theo tiếng: " + dictionaryName + "</p>";
-                htmlText.append(htmlTitle);
-                if (searchedWords.get(dictionaryName) != null) {
-                    htmlText.append(searchedWords.get(dictionaryName).toHTMLString());
-                } else {
-                    htmlText.append(htmlNullWord);
-                }
-            });
-        } else {
-            // tra từ trong list từ đã tạo
-            dictionaries.keySet().forEach(dictionaryName -> {
-                for (Word tmpWord : dictionaries.get(dictionaryName)) {
-                    if (tmpWord.getVocabulary().equalsIgnoreCase(vocabulary)) {
-                        htmlText.append(tmpWord.toHTMLString());
-                        break;
+        Map<String, Word> searchedWords = searchWordInAllDictionary(vocabulary);
+        switch (dicEnum){
+            case EN_NATIONS:
+                htmlText.append("<u style=\"color:red;font-size:22px;font-family:tahoma\"> TỪ: ").append(vocabulary.toUpperCase()).append("</u>");
+                searchedWords.keySet().forEach(dictionaryName -> {
+                    String htmlTitle = "<p style=\"font-size:16px;font-family:tahoma\">" + "Dịch theo tiếng: " + dictionaryName + "</p>";
+                    htmlText.append(htmlTitle);
+                    if (searchedWords.get(dictionaryName) != null) {
+                        htmlText.append(searchedWords.get(dictionaryName).toHTMLString());
+                    } else {
+                        htmlText.append(htmlNullWord);
                     }
-                }
-            });
+                }); 
+                break;
+            case ONLY_EN_VI:
+                searchedWords.keySet().forEach(dictionaryName -> {
+                    htmlText.append(searchedWords.get(dictionaryName).toHTMLString());
+                }); 
+                break;
         }
 
         epSelected = epWordView;
@@ -229,6 +208,7 @@ public class PanelCenter extends javax.swing.JPanel {
     private Map<String, Word> searchWordInAllDictionary(String vocabulary) {
         Map<String, Word> result = new LinkedHashMap<>();
 
+        Map<String, List<Word>> dictionaries = dictionarySets.get(dicEnum);
         dictionaries.keySet().forEach(dictionaryName -> {
             Word tmpWord = null;
             for (Word word : dictionaries.get(dictionaryName)) {
@@ -452,5 +432,9 @@ public class PanelCenter extends javax.swing.JPanel {
         } while (validFileName.contains(extendsionSeparator + ""));
 
         return parentPath + File.separator + validFileName + extendsionSeparator + typeOfSaveFile;
+    }
+    
+    public void setDicEnum(DictionaryEnum dicEnum){
+        this.dicEnum = dicEnum;
     }
 }

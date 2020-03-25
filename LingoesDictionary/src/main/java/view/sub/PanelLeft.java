@@ -14,7 +14,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.function.BiPredicate;
 import javax.swing.BorderFactory;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JSplitPane;
@@ -39,8 +38,10 @@ public class PanelLeft extends javax.swing.JPanel {
             .createCompoundBorder(new LineBorder(new Color(153,153,153), 1), new LineBorder(Color.WHITE, 5));
     private final String homepageKey = getClass().getResource("/pictures/icon-homepage-16px.png").toString();
     private DefaultComboBoxModel<WordAndIndex> cbbModelOfMainForm;
+    private DictionaryEnum dicEnum;
     
-    public PanelLeft(JSplitPane splitPane, DefaultComboBoxModel<WordAndIndex> cbbModel) {
+    public PanelLeft(JSplitPane splitPane, DefaultComboBoxModel<WordAndIndex> cbbModel, DictionaryEnum dicEnum) {
+        this.dicEnum = dicEnum;
         this.splitPane = splitPane;
         this.splitPane.setEnabled(false);
         this.cbbModelOfMainForm = cbbModel;
@@ -53,7 +54,7 @@ public class PanelLeft extends javax.swing.JPanel {
     private void initComponentManuallys() {
         pnLeftCenter.setLayout(cardLayout);
         
-        homepagePanel = new HomepagePanel(splitPane);
+        homepagePanel = new HomepagePanel(dicEnum, splitPane);
         settingPanel = new SettingPanel(this);
         addendumPanel = new AddendumPanel(splitPane);
         
@@ -62,7 +63,6 @@ public class PanelLeft extends javax.swing.JPanel {
         pnLeftCenter.add(homepagePanel, btHomepage.getIcon().toString());
         pnLeftCenter.add(settingPanel, btSetting.getIcon().toString());
         pnLeftCenter.add(addendumPanel, btAddendum.getIcon().toString());
-         
     }
     
     private void initEvents() {

@@ -1,4 +1,5 @@
 entities\NationsTypeOfWord.class
+view\MainForm$6.class
 entities\NationsMeaningOfWord.class
 entities\WordAndIndex.class
 test\TestBtSave$3.class
@@ -29,6 +30,7 @@ view\sub\PanelLeft.class
 test\VoiceTest.class
 entities\NationsWord.class
 view\sub\AddendumPanel$1.class
+view\sub\PanelCenter$6.class
 view\sub\PanelCenter$1.class
 view\MainForm$4.class
 dao\WordDao.class
@@ -42,13 +44,16 @@ view\sub\SettingPanel.class
 view\MainForm$1.class
 dao\WordDaoImpl.class
 view\sub\PanelLeft$1.class
+view\sub\PanelCenter$7.class
 view\sub\TranslatorPanel$2.class
 view\sub\HomepagePanel.class
 utils\TranslatorUtils.class
 test\Test.class
+view\MainForm$7.class
 entities\Word.class
 entities\OnlyEVTypeOfWord.class
 view\sub\PanelCenter$4.class
+common\Browser.class
 utils\ImageUtils.class
 entities\OnlyEVMeaningOfWord.class
 test\TestBtSave$1.class

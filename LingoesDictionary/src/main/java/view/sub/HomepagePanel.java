@@ -9,7 +9,6 @@ import entities.DictionaryEnum;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
@@ -46,10 +45,6 @@ public class HomepagePanel extends javax.swing.JPanel {
     private int heightOfBtWord;
     private DictionaryEnum dicEnum;
     
-    public HomepagePanel(JSplitPane splitPane){
-        this(DictionaryEnum.ONLY_EN_VI, splitPane);
-    }
-    
     public HomepagePanel(DictionaryEnum dicEnum , JSplitPane splitPane) {
         this.splitPane = splitPane;
         this.dicEnum = dicEnum;
@@ -63,7 +58,7 @@ public class HomepagePanel extends javax.swing.JPanel {
         indexOfCurBtWord = 0;
         vocabularies = getVocabularies();
         scpWords.getVerticalScrollBar().setUnitIncrement(16);
-        pnCenter = new PanelCenter();
+        pnCenter = (PanelCenter) splitPane.getRightComponent();
         
         JButton tmpButton = new JButton("Word");
         heightOfBtWord = SizeUtils.getPreHeight(tmpButton);
@@ -134,8 +129,7 @@ public class HomepagePanel extends javax.swing.JPanel {
             btWords[indexOfCurBtWord].setForeground(normalColor);
             indexOfCurBtWord = Integer.parseInt(btWord.getName());
             btWord.setForeground(clickedColor);
-            PanelCenter tmpPnCenter = (PanelCenter) splitPane.getRightComponent();
-            tmpPnCenter.loadVocabulary(btWord.getText(), dicEnum);
+            pnCenter.loadVocabulary(btWord.getText());
         });
     }
 
@@ -155,7 +149,7 @@ public class HomepagePanel extends javax.swing.JPanel {
             if(func.test(btWords[i].getText(), text)){
                 // active MouseListener of this lbWord
                 btWords[i].doClick();
-                splitPane.getRightComponent().revalidate();
+                pnCenter.revalidate();
                 scpWords.getVerticalScrollBar().setValue(i * (heightOfBtWord + 5));
                 // then break this loop
                 return i;
@@ -163,8 +157,7 @@ public class HomepagePanel extends javax.swing.JPanel {
         }
         
         // if no lbWord contain text -> pnCenterCenter show no result
-        PanelCenter pnCenterOfSplitPane = (PanelCenter) splitPane.getRightComponent();
-        pnCenterOfSplitPane.loadNoResult();
+        pnCenter.loadNoResult();
         
         return -1;
     }
@@ -176,8 +169,7 @@ public class HomepagePanel extends javax.swing.JPanel {
             scpWords.getVerticalScrollBar().setValue(index * (heightOfBtWord + 5));
         } else {
             // if no lbWord contain text -> pnCenterCenter show no result
-            PanelCenter pnCenterOfSplitPane = (PanelCenter) splitPane.getRightComponent();
-            pnCenterOfSplitPane.loadNoResult();
+            pnCenter.loadNoResult();
         }
     }
     
@@ -219,6 +211,7 @@ public class HomepagePanel extends javax.swing.JPanel {
             this.dicEnum = choosenDicEnum;
             pnWords.removeAll();
             initComponentManuallys();
+            pnCenter.setDicEnum(dicEnum);
             pnWords.revalidate();
             JOptionPane.showMessageDialog(this, "Đã thay đổi từ điển");
             return true;

@@ -6,6 +6,7 @@
 package view;
 
 import common.Browser;
+import entities.DictionaryEnum;
 import entities.WordAndIndex;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,8 +19,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +44,7 @@ import view.sub.PanelLeft;
  * @author USER
  */
 public class MainForm extends javax.swing.JFrame {
-
+    private DictionaryEnum dicEnum;
     private int indexOfCurWord;
     private final Container container = getContentPane();
     private final String ICON_PATH = getClass().getResource("/pictures/icon-lingoes-16px.jpg").getPath();
@@ -63,7 +62,11 @@ public class MainForm extends javax.swing.JFrame {
     private final Border border = new CompoundBorder(
             new MatteBorder(0, 5, 0, 5, new Color(201, 208, 240)), new MatteBorder(1, 1, 0, 1, Color.GRAY));
 
-    public MainForm() {
+    public MainForm(){
+        this(DictionaryEnum.EN_NATIONS);
+    }
+    public MainForm(DictionaryEnum dicEnum) {
+        this.dicEnum = dicEnum;
         indexOfCurWord = -1;
 
         initComponents();
@@ -252,11 +255,11 @@ public class MainForm extends javax.swing.JFrame {
         splitPane.setForeground(new Color(204, 204, 204));
         splitPane.setBorder(border);
 
-        pnCenter = new PanelCenter();
-        pnLeft = new PanelLeft(splitPane, cbbModel);
-
-        splitPane.add(pnLeft, JSplitPane.LEFT);
+        pnCenter = new PanelCenter(dicEnum);
         splitPane.add(pnCenter, JSplitPane.RIGHT);
+        
+        pnLeft = new PanelLeft(splitPane, cbbModel, dicEnum);
+        splitPane.add(pnLeft, JSplitPane.LEFT);
 
         container.add(splitPane, BorderLayout.CENTER);
 

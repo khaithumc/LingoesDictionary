@@ -6,6 +6,7 @@
 package view.sub;
 
 import common.LanguageEnum;
+import entities.DictionaryEnum;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -24,14 +25,15 @@ import utils.TranslatorUtils;
  * @author USER
  */
 public class TranslatorPanel extends javax.swing.JPanel {
-
-    private PanelCenter panelCenter;
+//    private PanelCenter panelCenter;
+    private DictionaryEnum dicEnum;
     private Map<String, String> mapLanguage;
     private final LanguageEnum[] languages = LanguageEnum.values();
     private ComboBoxModel<String> languageModelFrom;
     private ComboBoxModel<String> languageModelTo;
 
-    public TranslatorPanel() {
+    public TranslatorPanel(DictionaryEnum dicEnum) {
+        this.dicEnum = dicEnum;
         initComponents();
         initComponentManuallys();
         initEvents();
@@ -44,7 +46,7 @@ public class TranslatorPanel extends javax.swing.JPanel {
     }
 
     private void initTextAreaData() {
-        panelCenter = new PanelCenter();
+//        panelCenter = new PanelCenter(dicEnum);
         String s = taFrom.getText();
         System.out.println(taFrom.getText());
         System.out.println(s);

@@ -20,7 +20,7 @@ public enum DictionaryEnum {
     
     private DictionaryEnum(String name, String vocabularyFilename) {
         this.name = name;
-        this.path = getClass().getResource("/documents/" + name + "/").getPath();
+        this.path = getClass().getResource("/documents/" + name).getPath();
         this.vocabularyPath = getClass().getResource("/documents/" + vocabularyFilename).getPath();
     }
     
