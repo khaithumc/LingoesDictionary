@@ -5,6 +5,7 @@
  */
 package view;
 
+import common.Browser;
 import entities.WordAndIndex;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,9 +18,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRootPane;
 import javax.swing.JSplitPane;
@@ -41,6 +45,7 @@ import view.sub.PanelLeft;
  * @author USER
  */
 public class MainForm extends javax.swing.JFrame {
+
     private int indexOfCurWord;
     private final Container container = getContentPane();
     private final String ICON_PATH = getClass().getResource("/pictures/icon-lingoes-16px.jpg").getPath();
@@ -48,7 +53,7 @@ public class MainForm extends javax.swing.JFrame {
     private final BiPredicate<String, String> searchFullWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.equalsIgnoreCase(s2);
     private final Font normalWordFont = new Font("Tahoma", Font.PLAIN, 16);
     private DefaultComboBoxModel<WordAndIndex> cbbModel;
-    
+
     private final JSplitPane splitPane = new JSplitPane();
     private PanelLeft pnLeft;
     private PanelCenter pnCenter;
@@ -63,9 +68,9 @@ public class MainForm extends javax.swing.JFrame {
 
         initComponents();
         initComponentManuallys();
-        
+
         initEvents();
-        
+
     }
 
     /**
@@ -85,6 +90,7 @@ public class MainForm extends javax.swing.JFrame {
         cbbSearch = new javax.swing.JComboBox<>();
         tfWebSearch = new javax.swing.JTextField();
         btWebSearch = new javax.swing.JButton();
+        cbBrowser = new javax.swing.JComboBox<>();
         pnBottom = new javax.swing.JPanel();
         lbFooter = new javax.swing.JLabel();
 
@@ -115,11 +121,11 @@ public class MainForm extends javax.swing.JFrame {
         cbbSearch.setToolTipText("");
         cbbSearch.setBorder(null);
 
-        tfWebSearch.setText("google");
-
         btWebSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pictures/icon-websearch-16px.png"))); // NOI18N
         btWebSearch.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
         btWebSearch.setFocusPainted(false);
+
+        cbBrowser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout pnTopLayout = new javax.swing.GroupLayout(pnTop);
         pnTop.setLayout(pnTopLayout);
@@ -131,11 +137,13 @@ public class MainForm extends javax.swing.JFrame {
                 .addGap(2, 2, 2)
                 .addComponent(btNext, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbbSearch, 0, 57, Short.MAX_VALUE)
+                .addComponent(cbbSearch, 0, 188, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfWebSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tfWebSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbBrowser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btWebSearch)
                 .addGap(10, 10, 10))
@@ -152,12 +160,13 @@ public class MainForm extends javax.swing.JFrame {
                         .addComponent(btNext, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btBack, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(tfWebSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btWebSearch))
+                        .addComponent(btWebSearch)
+                        .addComponent(cbBrowser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(cbbSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnTopLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btBack, btNext, btSearch, btWebSearch, cbbSearch, tfWebSearch});
+        pnTopLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btBack, btNext, btSearch, btWebSearch, cbBrowser, cbbSearch, tfWebSearch});
 
         getContentPane().add(pnTop, java.awt.BorderLayout.PAGE_START);
 
@@ -173,7 +182,7 @@ public class MainForm extends javax.swing.JFrame {
             pnBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnBottomLayout.createSequentialGroup()
                 .addComponent(lbFooter)
-                .addGap(0, 159, Short.MAX_VALUE))
+                .addGap(0, 329, Short.MAX_VALUE))
         );
         pnBottomLayout.setVerticalGroup(
             pnBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -233,14 +242,14 @@ public class MainForm extends javax.swing.JFrame {
         setResizable(true);
         setSize(800, 500);
         setTitle("Lingoes");
-        
+
         // init cbbSearch
         cbbModel = new DefaultComboBoxModel<>();
         cbbSearch.setModel(cbbModel);
-        
+
         splitPane.setOneTouchExpandable(true);
         splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setForeground(new Color(204,204,204));
+        splitPane.setForeground(new Color(204, 204, 204));
         splitPane.setBorder(border);
 
         pnCenter = new PanelCenter();
@@ -252,7 +261,7 @@ public class MainForm extends javax.swing.JFrame {
         container.add(splitPane, BorderLayout.CENTER);
 
         initTitleBar();
-        
+
         // init tfSearch
         tfSearch = (JTextField) cbbSearch.getEditor().getEditorComponent();
         tfSearch.setFont(normalWordFont);
@@ -276,6 +285,7 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton btNext;
     private javax.swing.JButton btSearch;
     private javax.swing.JButton btWebSearch;
+    private javax.swing.JComboBox<String> cbBrowser;
     private javax.swing.JComboBox<WordAndIndex> cbbSearch;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbFooter;
@@ -291,30 +301,59 @@ public class MainForm extends javax.swing.JFrame {
         initBtSearchEvents();
         initWebSearchEvents();
     }
-    
+
     private void initWebSearchEvents() {
+        initCbBrowsers();
+
         btWebSearch.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                getURLToBrowser();
+                initBrowsers();
             }
-            
+
         });
         tfWebSearch.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    getURLToBrowser();
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    initBrowsers();
                 }
             }
-            
+
         });
     }
-    
-    private void getURLToBrowser() {
-        String a = tfWebSearch.getText();
+
+    private void initCbBrowsers() {
+        Browser[] browserEnums = Browser.values();
+
+        String[] browsers = new String[browserEnums.length];
+        for (int i = 0; i < browsers.length; i++) {
+            browsers[i] = browserEnums[i].toString();
+        }
+
+        ComboBoxModel<String> boxModel = new DefaultComboBoxModel<>(browsers);
+        cbBrowser.setModel(boxModel);
+    }
+
+    private void initBrowsers() {
+        String s = tfWebSearch.getText();
+        String google = "https://www.google.com/search?q=" + s + "&hl=vi";
+        String bing = "https://www.bing.com/search?q=" + s;
+        String yahoo = "https://search.yahoo.com/search?p=" + s + "&ei=UTF-8";
+
+        if (cbBrowser.getSelectedItem().equals(Browser.Google.toString())) {
+            getURL(google);
+        } else if (cbBrowser.getSelectedItem().equals(Browser.Bing.toString())) {
+            getURL(bing);
+        } else {
+            getURL(yahoo);
+        }
+
+    }
+
+    private void getURL(String s) {
         try {
-            Desktop.getDesktop().browse(URI.create("http://www.google.com/search?h1=en&q="+a+"&btnG=Google+Search"));
+            Desktop.getDesktop().browse(URI.create(s));
         } catch (IOException ex) {
             Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -327,12 +366,12 @@ public class MainForm extends javax.swing.JFrame {
                 // call method of homepagePanel to search word
                 pnLeft.activeBtHomepage();
                 String typingText = tfSearch.getText();
-                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     // nếu không tồn tại từ đang tra trong ds từ đã lưu thì sẽ thực hiện tìm kiếm và thêm mới vào ds từ
                     // getIndexOf sẽ dựa vào hàm equals trong WordAndIndex để xác định (chỉ so sánh 2 từ, không so sánh 2 index)
                     WordAndIndex wai = new WordAndIndex(typingText, -1);
                     int indexOfTypingText = cbbModel.getIndexOf(wai);
-                    if(indexOfTypingText == -1){
+                    if (indexOfTypingText == -1) {
                         wai.setIndex(pnLeft.searchWord(typingText, searchFullWordFunc));
                         cbbModel.addElement(wai);
                     } else {
@@ -341,17 +380,17 @@ public class MainForm extends javax.swing.JFrame {
                         cbbModel.addElement(wai);
                         pnLeft.showWordAtIndex(wai.getIndex());
                     }
-                    
+
                 } else {
                     pnLeft.searchWord(typingText, searchWordFunc);
                 }
-                
+
                 tfSearch.setText(typingText);
-                
+
                 // set indexOfCurWord to last index of word list
                 indexOfCurWord = cbbModel.getSize() - 1;
             }
-            
+
         });
     }
 
@@ -359,7 +398,7 @@ public class MainForm extends javax.swing.JFrame {
         btBack.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if(indexOfCurWord > 0){
+                if (indexOfCurWord > 0) {
                     WordAndIndex wai = cbbModel.getElementAt(--indexOfCurWord);
                     tfSearch.setText(wai.getWord());
                     pnLeft.activeBtHomepage();
@@ -373,7 +412,7 @@ public class MainForm extends javax.swing.JFrame {
         btNext.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if(indexOfCurWord < cbbModel.getSize() - 1){
+                if (indexOfCurWord < cbbModel.getSize() - 1) {
                     WordAndIndex wai = cbbModel.getElementAt(++indexOfCurWord);
                     tfSearch.setText(wai.getWord());
                     pnLeft.activeBtHomepage();
