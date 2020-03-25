@@ -109,4 +109,9 @@ public class AddendumPanel extends javax.swing.JPanel {
         lbIVerbs.setFont(wordFont);
         lbAbbreviations.setFont(wordFont);
     }
+    
+    public void setNormalAllLabel(){
+        lbAbbreviations.setForeground(Color.BLACK);
+        lbIVerbs.setForeground(Color.BLACK);
+    }
 }

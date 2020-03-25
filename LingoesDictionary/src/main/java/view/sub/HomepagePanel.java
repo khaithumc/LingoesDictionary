@@ -219,4 +219,8 @@ public class HomepagePanel extends javax.swing.JPanel {
         
         return false;
     }
+    
+    public void setNormalAllLabel(){
+        btWords[indexOfCurBtWord].setForeground(normalColor);
+    }
 }

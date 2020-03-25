@@ -77,6 +77,11 @@ public class PanelLeft extends javax.swing.JPanel {
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent arg0) {
+                        // Đưa các nút đang được click ở panel khác về trạng thái bình thường
+                        homepagePanel.setNormalAllLabel();
+                        settingPanel.setNormalAllLabel();
+                        addendumPanel.setNormalAllLabel();
+
                         String key = button.getIcon().toString();
                         cardLayout.show(pnLeftCenter, key);
                         

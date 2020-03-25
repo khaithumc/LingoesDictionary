@@ -26,10 +26,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="lbDictionaryKindSetting" pref="170" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lbLanguageSetting" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="lbWebSearchSetting" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="lbLanguageSetting" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -42,11 +39,9 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="lbLanguageSetting" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="lbWebSearchSetting" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="lbDictionaryKindSetting" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="233" max="32767" attributes="0"/>
+              <EmptySpace pref="248" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -55,11 +50,6 @@
     <Component class="javax.swing.JLabel" name="lbLanguageSetting">
       <Properties>
         <Property name="text" type="java.lang.String" value="C&#xe0;i &#x111;&#x1eb7;t ng&#xf4;n ng&#x1eef; &#x1ee9;ng d&#x1ee5;ng"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="lbWebSearchSetting">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="C&#xe0;i &#x111;&#x1eb7;t WebSearch"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lbDictionaryKindSetting">

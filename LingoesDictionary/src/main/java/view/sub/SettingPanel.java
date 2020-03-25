@@ -5,7 +5,6 @@
  */
 package view.sub;
 
-import entities.DictionaryEnum;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -36,14 +35,11 @@ public class SettingPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         lbLanguageSetting = new javax.swing.JLabel();
-        lbWebSearchSetting = new javax.swing.JLabel();
         lbDictionaryKindSetting = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
         lbLanguageSetting.setText("Cài đặt ngôn ngữ ứng dụng");
-
-        lbWebSearchSetting.setText("Cài đặt WebSearch");
 
         lbDictionaryKindSetting.setText("Cài đặt bộ từ điển ứng dụng");
 
@@ -56,9 +52,7 @@ public class SettingPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbDictionaryKindSetting, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbLanguageSetting)
-                            .addComponent(lbWebSearchSetting))
+                        .addComponent(lbLanguageSetting)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -67,11 +61,9 @@ public class SettingPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lbLanguageSetting)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbWebSearchSetting)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbDictionaryKindSetting)
-                .addContainerGap(233, Short.MAX_VALUE))
+                .addContainerGap(248, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -79,7 +71,6 @@ public class SettingPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lbDictionaryKindSetting;
     private javax.swing.JLabel lbLanguageSetting;
-    private javax.swing.JLabel lbWebSearchSetting;
     // End of variables declaration//GEN-END:variables
 
     private void initEvents() {
@@ -88,10 +79,15 @@ public class SettingPanel extends javax.swing.JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 lbLanguageSetting.setForeground(Color.BLACK);
-                lbWebSearchSetting.setForeground(Color.BLACK);
                 lbDictionaryKindSetting.setForeground(Color.LIGHT_GRAY);
                 pnLeft.setNewDictionary();
             }
         });
+    }
+    
+    public void setNormalAllLabel(){
+        lbLanguageSetting.setForeground(Color.BLACK);
+        lbDictionaryKindSetting.setForeground(Color.BLACK);
+        
     }
 }
