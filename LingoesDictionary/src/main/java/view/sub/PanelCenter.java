@@ -43,7 +43,6 @@ import utils.VoiceUtils;
  */
 public class PanelCenter extends javax.swing.JPanel {
 
-
     private static JEditorPane epSelected = new JEditorPane();
     private static String voiceWord;
     private static String translatorText;
@@ -57,28 +56,29 @@ public class PanelCenter extends javax.swing.JPanel {
     private final String onlyEVDicFileName = "OnlyEVDictionary.txt";
 
     private DictionaryEnum dicEnum;
+
     // mặc định là mở từ điển Anh-Việt
-    public PanelCenter(){
+    public PanelCenter() {
         this(DictionaryEnum.ONLY_EN_VI);
     }
-    
+
     public PanelCenter(DictionaryEnum dicEnum) {
         this.dicEnum = dicEnum;
         loadDictionariesData();
-        
+
         initComponents();
         initComponentManuallys();
         initEvents();
-        
+
         // cài để khi mở app thì nút btStartHomepage sẽ thực hiện để hiển thị StartHomepagePanel
         btStartPage.doClick();
     }
-    
-    private void loadDictionariesData(){
+
+    private void loadDictionariesData() {
         dictionaries = new LinkedHashMap<>();
         WordDao wd = new WordDaoImpl();
 
-        if(dicEnum == DictionaryEnum.ONLY_EN_VI){
+        if (dicEnum == DictionaryEnum.ONLY_EN_VI) {
             dictionaries.put(FilenameUtils.getBaseName(onlyEVDicFileName), wd.getWords(dicEnum, onlyEVDicFileName));
         } else {
             // lấy tất cả các file từ điển đang lưu trong documents/dictionary 
@@ -99,7 +99,7 @@ public class PanelCenter extends javax.swing.JPanel {
         btFind.setToolTipText("Tìm...");
         btTranslate.setToolTipText("Sử dụng chức năng dich đoạn văn bản");
         btStartPage.setToolTipText("Start Page");
-        
+
         scpCenterCenter.getVerticalScrollBar().setUnitIncrement(16);
 
     }
@@ -150,12 +150,10 @@ public class PanelCenter extends javax.swing.JPanel {
         btSpeaker.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                
-               if (epSelected.getSelectedText() == null && translatorText == null) {
+
+                if (epSelected.getSelectedText() == null) {
                     VoiceUtils.ConvertTextToSpeech(voiceWord);
-                } else if (translatorText != null) {
-                    VoiceUtils.ConvertTextToSpeech(translatorText);
-                } else{
+                } else {
                     VoiceUtils.ConvertTextToSpeech(epSelected.getSelectedText());
                 }
             }
@@ -166,30 +164,26 @@ public class PanelCenter extends javax.swing.JPanel {
         voiceWord = s;
     }
 
-    public void setTranslatorText(String s) {
-        translatorText = s;
-    }
-
-    public void loadVocabulary(String vocabulary, DictionaryEnum dicEnum){
-        if(this.dicEnum != dicEnum){
+    public void loadVocabulary(String vocabulary, DictionaryEnum dicEnum) {
+        if (this.dicEnum != dicEnum) {
             this.dicEnum = dicEnum;
             loadDictionariesData();
         }
         curWord = vocabulary;
-        
+
         JEditorPane epWordView = new JEditorPane();
         epWordView.setName("Word_EditorPane");
         epWordView.setContentType("text/html");
         epWordView.setEditable(false);
-        StringBuilder htmlText = new StringBuilder(); 
+        StringBuilder htmlText = new StringBuilder();
 
-        if(dicEnum == DictionaryEnum.EN_NATIONS){
+        if (dicEnum == DictionaryEnum.EN_NATIONS) {
             Map<String, Word> searchedWords = searchWordInAllDictionary(vocabulary);
             htmlText.append("<u style=\"color:red;font-size:22px;font-family:tahoma\"> TỪ: ").append(vocabulary.toUpperCase()).append("</u>");
             searchedWords.keySet().forEach(dictionaryName -> {
                 String htmlTitle = "<p style=\"font-size:16px;font-family:tahoma\">" + "Dịch theo tiếng: " + dictionaryName + "</p>";
                 htmlText.append(htmlTitle);
-                if(searchedWords.get(dictionaryName) != null){
+                if (searchedWords.get(dictionaryName) != null) {
                     htmlText.append(searchedWords.get(dictionaryName).toHTMLString());
                 } else {
                     htmlText.append(htmlNullWord);
@@ -198,50 +192,50 @@ public class PanelCenter extends javax.swing.JPanel {
         } else {
             // tra từ trong list từ đã tạo
             dictionaries.keySet().forEach(dictionaryName -> {
-                for(Word tmpWord : dictionaries.get(dictionaryName)){
-                    if(tmpWord.getVocabulary().equalsIgnoreCase(vocabulary)){
+                for (Word tmpWord : dictionaries.get(dictionaryName)) {
+                    if (tmpWord.getVocabulary().equalsIgnoreCase(vocabulary)) {
                         htmlText.append(tmpWord.toHTMLString());
                         break;
                     }
                 }
             });
         }
-        
+
         epSelected = epWordView;
         curWordToHTML = htmlText.toString();
-        epWordView.setText(curWordToHTML); 
+        epWordView.setText(curWordToHTML);
         epWordView.setCaretPosition(0);
-        
+
         scpCenterCenter.setViewportView(epWordView);
     }
-    
-    private Map<String, Word> searchWordInAllDictionary(String vocabulary){
+
+    private Map<String, Word> searchWordInAllDictionary(String vocabulary) {
         Map<String, Word> result = new LinkedHashMap<>();
-        
+
         dictionaries.keySet().forEach(dictionaryName -> {
             Word tmpWord = null;
-            for(Word word : dictionaries.get(dictionaryName)){
-                if(word.getVocabulary().equals(vocabulary)){
+            for (Word word : dictionaries.get(dictionaryName)) {
+                if (word.getVocabulary().equals(vocabulary)) {
                     tmpWord = word;
                     break;
                 }
             }
             result.put(dictionaryName, tmpWord);
         });
-        
+
         return result;
     }
-    
-     public void showHTMLFile(String path){
+
+    public void showHTMLFile(String path) {
         File file = new File(path);
         JEditorPane ep = new JEditorPane();
-        try{
+        try {
             ep.setPage(file.toURI().toURL());
         } catch (IOException ex) {
         }
-        
+
         scpCenterCenter.setViewportView(ep);
-        
+
     }
 
     private void initBtStartPageEvents() {
@@ -368,14 +362,13 @@ public class PanelCenter extends javax.swing.JPanel {
     private javax.swing.JScrollPane scpCenterCenter;
     // End of variables declaration//GEN-END:variables
 
-      
-    private void initBtFindEvents(){
+    private void initBtFindEvents() {
         btFind.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                new FindPanel((JTextComponent)scpCenterCenter.getViewport().getView()).setVisible(true);
+                new FindPanel((JTextComponent) scpCenterCenter.getViewport().getView()).setVisible(true);
             }
-            
+
         });
     }
 
@@ -383,15 +376,15 @@ public class PanelCenter extends javax.swing.JPanel {
         btSave.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                
+
                 Component tmpComponent = scpCenterCenter.getViewport().getView();
-                
+
                 // if the showing is not a word -> show a dialog to announce and return
-                if(!(tmpComponent instanceof JEditorPane)){
+                if (!(tmpComponent instanceof JEditorPane)) {
                     JOptionPane.showMessageDialog(null, "This is not a word to save");
                     return;
                 }
-                
+
                 // show saveDialog and get Path to save file
                 JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView());
                 FileNameExtensionFilter extensionFilter = new FileNameExtensionFilter("HTML file (*.html)", typeOfSaveFile);
@@ -401,22 +394,22 @@ public class PanelCenter extends javax.swing.JPanel {
 
                 String pathToSave = "";
                 int selection = fileChooser.showSaveDialog(null);
-                
-                if(selection == JFileChooser.APPROVE_OPTION){
+
+                if (selection == JFileChooser.APPROVE_OPTION) {
                     File fileToSave = fileChooser.getSelectedFile();
                     pathToSave = getValidPath(fileToSave);
-                    
+
                     // create file
                     File saveFile = new File(pathToSave);
 
                     // if file existed -> change file name 
                     try {
-                        if(saveFile.createNewFile()){
-                        // add value into created file
-                        FileWriter fileWriter = new FileWriter(saveFile);
-                        fileWriter.write(HTMLCodeUtils.convertToHTMLCodes(curWordToHTML));
-                        fileWriter.close();
-                        JOptionPane.showMessageDialog(null, "Word was saved");
+                        if (saveFile.createNewFile()) {
+                            // add value into created file
+                            FileWriter fileWriter = new FileWriter(saveFile);
+                            fileWriter.write(HTMLCodeUtils.convertToHTMLCodes(curWordToHTML));
+                            fileWriter.close();
+                            JOptionPane.showMessageDialog(null, "Word was saved");
                         } else {
                             JOptionPane.showMessageDialog(null, "file name existed, please try another one");
                         }
@@ -428,19 +421,19 @@ public class PanelCenter extends javax.swing.JPanel {
             }
         });
     }
-    
+
     /*
     user can type wrong file name (etc: test.g.sad.fsf.dfwe)
     -> this method will turn wrong file name to right with file extension is html (etc: test.html)
-    */
+     */
     private String getValidPath(File fileToSave) {
         String parentPath = fileToSave.getParent();
         String validFileName = fileToSave.getPath();
-        
+
         do {
             validFileName = FilenameUtils.getBaseName(validFileName);
         } while (validFileName.contains(extendsionSeparator + ""));
-        
+
         return parentPath + File.separator + validFileName + extendsionSeparator + typeOfSaveFile;
     }
 }

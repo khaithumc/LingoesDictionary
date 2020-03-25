@@ -48,7 +48,6 @@ public class TranslatorPanel extends javax.swing.JPanel {
         String s = taFrom.getText();
         System.out.println(taFrom.getText());
         System.out.println(s);
-        panelCenter.setTranslatorText(s);
     }
 
     private void initComboboxData() {
