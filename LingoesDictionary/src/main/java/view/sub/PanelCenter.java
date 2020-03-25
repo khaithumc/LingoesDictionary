@@ -12,6 +12,9 @@ import entities.NationsWord;
 import entities.Word;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -54,6 +57,7 @@ public class PanelCenter extends javax.swing.JPanel {
     private Map<String, List<Word>> dictionaries;
     private String curWordToHTML;
     private final String onlyEVDicFileName = "OnlyEVDictionary.txt";
+    final Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
 
     private DictionaryEnum dicEnum;
 
@@ -111,6 +115,7 @@ public class PanelCenter extends javax.swing.JPanel {
         initBtTranslateEvents();
         initBtSaveEvents();
         initBtFindEvents();
+        initBtCopyEvents();
     }
 
     private void initBtTranslateEvents() {
@@ -123,6 +128,18 @@ public class PanelCenter extends javax.swing.JPanel {
             }
         });
     }
+     private void initBtCopyEvents() {
+        btCopy.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String selection = curWord;
+                StringSelection data = new StringSelection(selection);
+                clip.setContents(data, data);
+            }
+
+        });
+    }
+    
 
     private void initPnTopButtonEvents() {
         final Component[] components = pnCenterTop.getComponents();
