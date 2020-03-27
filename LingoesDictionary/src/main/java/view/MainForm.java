@@ -6,7 +6,8 @@
 package view;
 
 import common.Browser;
-import entities.DictionaryEnum;
+import common.DictionaryEnum;
+import common.LanguageAppEnum;
 import entities.WordAndIndex;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -52,6 +53,7 @@ public class MainForm extends javax.swing.JFrame {
     private final BiPredicate<String, String> searchFullWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.equalsIgnoreCase(s2);
     private final Font normalWordFont = new Font("Tahoma", Font.PLAIN, 16);
     private DefaultComboBoxModel<WordAndIndex> cbbModel;
+    private LanguageAppEnum languageApp;
 
     private final JSplitPane splitPane = new JSplitPane();
     private PanelLeft pnLeft;
@@ -63,10 +65,11 @@ public class MainForm extends javax.swing.JFrame {
             new MatteBorder(0, 5, 0, 5, new Color(201, 208, 240)), new MatteBorder(1, 1, 0, 1, Color.GRAY));
 
     public MainForm(){
-        this(DictionaryEnum.EN_NATIONS);
+        this(DictionaryEnum.EN_NATIONS, LanguageAppEnum.RUSSIAN);
     }
-    public MainForm(DictionaryEnum dicEnum) {
+    public MainForm(DictionaryEnum dicEnum, LanguageAppEnum languageApp) {
         this.dicEnum = dicEnum;
+        this.languageApp = languageApp;
         indexOfCurWord = -1;
 
         initComponents();
@@ -255,10 +258,10 @@ public class MainForm extends javax.swing.JFrame {
         splitPane.setForeground(new Color(204, 204, 204));
         splitPane.setBorder(border);
 
-        pnCenter = new PanelCenter(dicEnum);
+        pnCenter = new PanelCenter(dicEnum, languageApp);
         splitPane.add(pnCenter, JSplitPane.RIGHT);
         
-        pnLeft = new PanelLeft(splitPane, cbbModel, dicEnum);
+        pnLeft = new PanelLeft(splitPane, cbbModel, dicEnum, languageApp);
         splitPane.add(pnLeft, JSplitPane.LEFT);
 
         container.add(splitPane, BorderLayout.CENTER);

@@ -5,8 +5,8 @@
  */
 package view.sub;
 
+import common.DictionaryEnum;
 import common.LanguageEnum;
-import entities.DictionaryEnum;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;

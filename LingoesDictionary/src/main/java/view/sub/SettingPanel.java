@@ -5,6 +5,7 @@
  */
 package view.sub;
 
+import common.LanguageAppEnum;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,10 +19,14 @@ public class SettingPanel extends javax.swing.JPanel {
     /**
      * Creates new form SettingPanel
      */
+    private LanguageAppEnum languageApp;
     private PanelLeft pnLeft;
-    public SettingPanel(PanelLeft panelLeft) {
+    
+    public SettingPanel(PanelLeft panelLeft, LanguageAppEnum languageApp) {
         this.pnLeft = panelLeft;
+        this.languageApp = languageApp;
         initComponents();
+        initComponentManuallys();
         initEvents();
     }
 
@@ -83,11 +88,29 @@ public class SettingPanel extends javax.swing.JPanel {
                 pnLeft.setNewDictionary();
             }
         });
+        
+        lbLanguageSetting.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                lbDictionaryKindSetting.setForeground(Color.BLACK);
+                lbLanguageSetting.setForeground(Color.LIGHT_GRAY);
+                pnLeft.setNewLanguageApp();
+            }
+        });
     }
     
     public void setNormalAllLabel(){
         lbLanguageSetting.setForeground(Color.BLACK);
         lbDictionaryKindSetting.setForeground(Color.BLACK);
-        
+    }
+    
+    public void setLanguageApp(LanguageAppEnum languageApp){
+        this.languageApp = languageApp;
+        lbLanguageSetting.setText(languageApp.getValue("set_language_app"));
+        lbDictionaryKindSetting.setText(languageApp.getValue("set_dictionary_kind"));
+    }
+
+    private void initComponentManuallys() {
+        setLanguageApp(languageApp);
     }
 }

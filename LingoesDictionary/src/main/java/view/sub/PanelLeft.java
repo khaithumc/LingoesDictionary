@@ -5,7 +5,8 @@
  */
 package view.sub;
 
-import entities.DictionaryEnum;
+import common.DictionaryEnum;
+import common.LanguageAppEnum;
 import entities.WordAndIndex;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -16,6 +17,7 @@ import java.util.function.BiPredicate;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
@@ -39,10 +41,12 @@ public class PanelLeft extends javax.swing.JPanel {
     private final String homepageKey = getClass().getResource("/pictures/icon-homepage-16px.png").toString();
     private DefaultComboBoxModel<WordAndIndex> cbbModelOfMainForm;
     private DictionaryEnum dicEnum;
+    private LanguageAppEnum languageApp;
     
-    public PanelLeft(JSplitPane splitPane, DefaultComboBoxModel<WordAndIndex> cbbModel, DictionaryEnum dicEnum) {
+    public PanelLeft(JSplitPane splitPane, DefaultComboBoxModel<WordAndIndex> cbbModel, DictionaryEnum dicEnum, LanguageAppEnum languageApp) {
         this.dicEnum = dicEnum;
         this.splitPane = splitPane;
+        this.languageApp = languageApp;
         this.splitPane.setEnabled(false);
         this.cbbModelOfMainForm = cbbModel;
         
@@ -54,9 +58,9 @@ public class PanelLeft extends javax.swing.JPanel {
     private void initComponentManuallys() {
         pnLeftCenter.setLayout(cardLayout);
         
-        homepagePanel = new HomepagePanel(dicEnum, splitPane);
-        settingPanel = new SettingPanel(this);
-        addendumPanel = new AddendumPanel(splitPane);
+        homepagePanel = new HomepagePanel(dicEnum, splitPane, languageApp);
+        settingPanel = new SettingPanel(this, languageApp);
+        addendumPanel = new AddendumPanel(splitPane, languageApp);
         
         btHomepage.setBorder(pnLeftButtonHighLightBorder);
         
@@ -131,6 +135,32 @@ public class PanelLeft extends javax.swing.JPanel {
     public void setNewDictionary(){
         if(homepagePanel.setNewDictionary()){
             cbbModelOfMainForm.removeAllElements();
+        }
+    }
+    
+    public void setNewLanguageApp(){
+        LanguageAppEnum choosenLanguageApp = (LanguageAppEnum) JOptionPane.showInputDialog(this, 
+                                            languageApp.getValue("set_dic_kind_mess"), 
+                                            languageApp.getValue("set_dic_kind_title"), 
+                                            JOptionPane.PLAIN_MESSAGE, 
+                                            null, 
+                                            LanguageAppEnum.values(), 
+                                            languageApp);
+        if(choosenLanguageApp == null){
+            return;
+        }
+        
+        if(choosenLanguageApp == languageApp){
+            JOptionPane.showMessageDialog(this, languageApp.getValue("already_set_new_language"));
+            setNewLanguageApp();
+        } else {
+            this.languageApp = choosenLanguageApp;
+            settingPanel.setLanguageApp(languageApp);
+            addendumPanel.setLanguageApp(languageApp);
+            homepagePanel.setLanguageApp(languageApp);
+            PanelCenter panelCenter = (PanelCenter) splitPane.getRightComponent();
+            panelCenter.setLanguageApp(languageApp);
+            JOptionPane.showMessageDialog(this, languageApp.getValue("complete_set_new_language"));
         }
     }
     /**

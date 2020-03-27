@@ -5,7 +5,7 @@
  */
 package dao;
 
-import entities.DictionaryEnum;
+import common.DictionaryEnum;
 import entities.NationsMeaningOfWord;
 import entities.NationsTypeOfWord;
 import entities.NationsWord;

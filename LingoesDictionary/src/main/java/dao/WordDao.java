@@ -5,7 +5,7 @@
  */
 package dao;
 
-import entities.DictionaryEnum;
+import common.DictionaryEnum;
 import entities.Word;
 import java.util.List;
 

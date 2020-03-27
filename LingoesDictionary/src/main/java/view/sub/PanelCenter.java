@@ -5,9 +5,10 @@
  */
 package view.sub;
 
+import common.DictionaryEnum;
+import common.LanguageAppEnum;
 import dao.WordDao;
 import dao.WordDaoImpl;
-import entities.DictionaryEnum;
 import entities.Word;
 import java.awt.Color;
 import java.awt.Component;
@@ -54,11 +55,12 @@ public class PanelCenter extends javax.swing.JPanel {
     private Map<DictionaryEnum, Map<String, List<Word>>> dictionarySets;
     private String curWordToHTML;
     final Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
-
+    private LanguageAppEnum languageApp;
     private DictionaryEnum dicEnum;
 
-    public PanelCenter(DictionaryEnum dicEnum) {
+    public PanelCenter(DictionaryEnum dicEnum, LanguageAppEnum languageApp) {
         this.dicEnum = dicEnum;
+        this.languageApp = languageApp;
         loadDictionariesData();
 
         initComponents();
@@ -82,15 +84,19 @@ public class PanelCenter extends javax.swing.JPanel {
     }
 
     private void initComponentManuallys() {
-        btSpeaker.setToolTipText("Phát âm phần văn bản được chọn");
-        btCopy.setToolTipText("Sao chép");
-        btSave.setToolTipText("Lưu...");
-        btPrint.setToolTipText("In...");
-        btFind.setToolTipText("Tìm...");
-        btTranslate.setToolTipText("Sử dụng chức năng dich đoạn văn bản");
-        btStartPage.setToolTipText("Start Page");
-
+        setLanguageApp(languageApp);
         scpCenterCenter.getVerticalScrollBar().setUnitIncrement(16);
+    }
+    
+    public void setLanguageApp(LanguageAppEnum languageApp){
+        this.languageApp = languageApp;
+        btSpeaker.setToolTipText(languageApp.getValue("speak_hint"));
+        btCopy.setToolTipText(languageApp.getValue("copy_hint"));
+        btSave.setToolTipText(languageApp.getValue("save_hint"));
+        btPrint.setToolTipText(languageApp.getValue("print_hint"));
+        btFind.setToolTipText(languageApp.getValue("find_hint"));
+        btStartPage.setToolTipText(languageApp.getValue("startpage_hint"));
+        btTranslate.setText(languageApp.getValue("translate_text"));
     }
 
     private void initEvents() {
@@ -365,7 +371,6 @@ public class PanelCenter extends javax.swing.JPanel {
             public void mousePressed(MouseEvent e) {
                 new FindPanel((JTextComponent) scpCenterCenter.getViewport().getView()).setVisible(true);
             }
-
         });
     }
 
@@ -401,18 +406,12 @@ public class PanelCenter extends javax.swing.JPanel {
 
                     // if file existed -> change file name 
                     try {
-                        if (saveFile.createNewFile()) {
                             // add value into created file
                             FileWriter fileWriter = new FileWriter(saveFile);
                             fileWriter.write(HTMLCodeUtils.convertToHTMLCodes(curWordToHTML));
                             fileWriter.close();
                             JOptionPane.showMessageDialog(null, "Word was saved");
-                        } else {
-                            JOptionPane.showMessageDialog(null, "file name existed, please try another one");
-                        }
-
                     } catch (IOException ex) {
-                        ex.printStackTrace();
                     }
                 }
             }

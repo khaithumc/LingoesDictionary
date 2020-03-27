@@ -5,6 +5,7 @@
  */
 package view.sub;
 
+import common.LanguageAppEnum;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -26,9 +27,12 @@ public class AddendumPanel extends javax.swing.JPanel {
     private final Font wordFont = new Font("Tahoma", Font.BOLD, 14);
     private final String pathToIrreVerbs = getClass().getResource("/documents/IRREGULAR_VERBS.html").getPath();
     private final String pathToAbbreviations = getClass().getResource("/documents/ABBREVIATIONS.html").getPath();
+    private LanguageAppEnum languageApp;
     
-    public AddendumPanel(JSplitPane splitPane) {
+    public AddendumPanel(JSplitPane splitPane, LanguageAppEnum languageApp) {
         this.splitPane = splitPane;
+        this.languageApp = languageApp;
+        
         initComponents();
         initComponentsManuallys();
         initLbIVerbEvents();
@@ -108,6 +112,13 @@ public class AddendumPanel extends javax.swing.JPanel {
     private void initComponentsManuallys() {
         lbIVerbs.setFont(wordFont);
         lbAbbreviations.setFont(wordFont);
+        setLanguageApp(languageApp);
+    }
+    
+    public void setLanguageApp(LanguageAppEnum languageApp){
+        this.languageApp = languageApp;
+        lbAbbreviations.setText(languageApp.getValue("abbreviations"));
+        lbIVerbs.setText(languageApp.getValue("irregular_vebs"));
     }
     
     public void setNormalAllLabel(){

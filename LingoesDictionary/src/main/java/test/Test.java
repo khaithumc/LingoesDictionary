@@ -5,9 +5,9 @@
  */
 package test;
 
+import common.DictionaryEnum;
 import dao.WordDao;
 import dao.WordDaoImpl;
-import entities.DictionaryEnum;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

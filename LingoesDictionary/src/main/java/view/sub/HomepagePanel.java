@@ -5,7 +5,8 @@
  */
 package view.sub;
 
-import entities.DictionaryEnum;
+import common.DictionaryEnum;
+import common.LanguageAppEnum;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -44,10 +45,12 @@ public class HomepagePanel extends javax.swing.JPanel {
     private int verLengthOfPnWords;
     private int heightOfBtWord;
     private DictionaryEnum dicEnum;
+    private LanguageAppEnum languageApp;
     
-    public HomepagePanel(DictionaryEnum dicEnum , JSplitPane splitPane) {
+    public HomepagePanel(DictionaryEnum dicEnum , JSplitPane splitPane, LanguageAppEnum languageApp) {
         this.splitPane = splitPane;
         this.dicEnum = dicEnum;
+        this.languageApp = languageApp;
         
         initComponents();
         initComponentManuallys();
@@ -199,13 +202,19 @@ public class HomepagePanel extends javax.swing.JPanel {
     }
     
     public boolean setNewDictionary(){
-        DictionaryEnum choosenDicEnum = (DictionaryEnum) JOptionPane.showInputDialog(this, "Chọn từ điển mà bạn muốn", "Cài đặt bộ từ điển", JOptionPane.PLAIN_MESSAGE, null, DictionaryEnum.values(), dicEnum);
+        DictionaryEnum choosenDicEnum = (DictionaryEnum) JOptionPane.showInputDialog(this, 
+                                                                languageApp.getValue("set_dic_kind_mess"), 
+                                                                languageApp.getValue("set_dic_kind_title"), 
+                                                                JOptionPane.PLAIN_MESSAGE, 
+                                                                null, 
+                                                                DictionaryEnum.values(), 
+                                                                dicEnum);
         if(choosenDicEnum == null){
             return false;
         }
         
         if(this.dicEnum == choosenDicEnum){
-            JOptionPane.showMessageDialog(this, "Từ điển đang được sử dụng");
+            JOptionPane.showMessageDialog(this, languageApp.getValue("already_set_new_dic"));
             setNewDictionary();
         } else {
             this.dicEnum = choosenDicEnum;
@@ -213,11 +222,15 @@ public class HomepagePanel extends javax.swing.JPanel {
             initComponentManuallys();
             pnCenter.setDicEnum(dicEnum);
             pnWords.revalidate();
-            JOptionPane.showMessageDialog(this, "Đã thay đổi từ điển");
+            JOptionPane.showMessageDialog(this, languageApp.getValue("complete_set_new_dic"));
             return true;
         }
         
         return false;
+    }
+    
+    public void setLanguageApp(LanguageAppEnum languageApp){
+        this.languageApp = languageApp;
     }
     
     public void setNormalAllLabel(){
