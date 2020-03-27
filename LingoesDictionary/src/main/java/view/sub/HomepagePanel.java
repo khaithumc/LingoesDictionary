@@ -36,7 +36,7 @@ public class HomepagePanel extends javax.swing.JPanel {
     private PanelCenter pnCenter;
     private JSplitPane splitPane;
     private JButton[] btWords;
-    
+
     private List<String> vocabularies;
     private final int maximumWordLength = 200;
     private int indexOfCurBtWord = 0;
@@ -46,28 +46,28 @@ public class HomepagePanel extends javax.swing.JPanel {
     private int heightOfBtWord;
     private DictionaryEnum dicEnum;
     private LanguageAppEnum languageApp;
-    
-    public HomepagePanel(DictionaryEnum dicEnum , JSplitPane splitPane, LanguageAppEnum languageApp) {
+
+    public HomepagePanel(DictionaryEnum dicEnum, JSplitPane splitPane, LanguageAppEnum languageApp) {
         this.splitPane = splitPane;
         this.dicEnum = dicEnum;
         this.languageApp = languageApp;
-        
+
         initComponents();
         initComponentManuallys();
-        
+
     }
-    
+
     private void initComponentManuallys() {
         indexOfCurBtWord = 0;
         vocabularies = getVocabularies();
         scpWords.getVerticalScrollBar().setUnitIncrement(16);
         pnCenter = (PanelCenter) splitPane.getRightComponent();
-        
+
         JButton tmpButton = new JButton("Word");
         heightOfBtWord = SizeUtils.getPreHeight(tmpButton);
         verLengthOfPnWords = (tmpButton.getPreferredSize().height + 5) * vocabularies.size();
         pnWords.setPreferredSize(new Dimension(pnWords.getPreferredSize().width, verLengthOfPnWords));
-        
+
         vocabularies.forEach((vocabulary) -> {
             JButton btWord = new JButton(vocabulary);
             btWord.setPreferredSize(new Dimension(maximumWordLength, btWord.getPreferredSize().height));
@@ -79,13 +79,13 @@ public class HomepagePanel extends javax.swing.JPanel {
             btWord.setBorderPainted(false);
             btWord.setOpaque(false);
             btWord.setHorizontalAlignment(SwingConstants.LEFT);
-            
+
             indexOfCurBtWord++;
             pnWords.add(btWord);
-            
+
             setEventBtWord(btWord);
         });
-        
+
         indexOfCurBtWord = 0;
         btWords = getBtWords();
     }
@@ -139,17 +139,17 @@ public class HomepagePanel extends javax.swing.JPanel {
     private JButton[] getBtWords() {
         JButton[] btWords = new JButton[vocabularies.size()];
         Component[] tmp = pnWords.getComponents();
-        
-        for(int i = 0; i < vocabularies.size(); i++) {
+
+        for (int i = 0; i < vocabularies.size(); i++) {
             btWords[i] = (JButton) tmp[i];
         }
-        
+
         return btWords;
     }
-    
-    public int searchWord(String text, BiPredicate func){
-        for(int i = 0; i < btWords.length; i++){
-            if(func.test(btWords[i].getText(), text)){
+
+    public int searchWord(String text, BiPredicate func) {
+        for (int i = 0; i < btWords.length; i++) {
+            if (func.test(btWords[i].getText(), text)) {
                 // active MouseListener of this lbWord
                 btWords[i].doClick();
                 pnCenter.revalidate();
@@ -158,15 +158,15 @@ public class HomepagePanel extends javax.swing.JPanel {
                 return i;
             }
         }
-        
+
         // if no lbWord contain text -> pnCenterCenter show no result
         pnCenter.loadNoResult();
-        
+
         return -1;
     }
-    
-    public void showWordAtIndex(int index){
-        if(index > -1){
+
+    public void showWordAtIndex(int index) {
+        if (index > -1) {
             btWords[index].doClick();
             splitPane.getRightComponent().revalidate();
             scpWords.getVerticalScrollBar().setValue(index * (heightOfBtWord + 5));
@@ -175,45 +175,42 @@ public class HomepagePanel extends javax.swing.JPanel {
             pnCenter.loadNoResult();
         }
     }
-    
-    private List<String> getVocabularies(){
+
+    private List<String> getVocabularies() {
         List<String> vocabularies = new ArrayList<>();
         File file = new File(dicEnum.getVocabularyPath());
-        try{
+        try {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(
-                    new FileInputStream(file), "UTF-8"));
- 
-		String line;
-                
-		while ((line = in.readLine()) != null) {
-                    vocabularies.add(line);
-                }
-        } catch (UnsupportedEncodingException e)
-        {
+                            new FileInputStream(file), "UTF-8"));
+
+            String line;
+
+            while ((line = in.readLine()) != null) {
+                vocabularies.add(line);
+            }
+        } catch (UnsupportedEncodingException e) {
+            System.out.println(e.getMessage());
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        catch (IOException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        
+
         return vocabularies;
     }
-    
-    public boolean setNewDictionary(){
-        DictionaryEnum choosenDicEnum = (DictionaryEnum) JOptionPane.showInputDialog(this, 
-                                                                languageApp.getValue("set_dic_kind_mess"), 
-                                                                languageApp.getValue("set_dic_kind_title"), 
-                                                                JOptionPane.PLAIN_MESSAGE, 
-                                                                null, 
-                                                                DictionaryEnum.values(), 
-                                                                dicEnum);
-        if(choosenDicEnum == null){
+
+    public boolean setNewDictionary() {
+        DictionaryEnum choosenDicEnum = (DictionaryEnum) JOptionPane.showInputDialog(this,
+                languageApp.getValue("set_dic_kind_mess"),
+                languageApp.getValue("set_dic_kind_title"),
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                DictionaryEnum.values(),
+                dicEnum);
+        if (choosenDicEnum == null) {
             return false;
         }
-        
-        if(this.dicEnum == choosenDicEnum){
+
+        if (this.dicEnum == choosenDicEnum) {
             JOptionPane.showMessageDialog(this, languageApp.getValue("already_set_new_dic"));
             setNewDictionary();
         } else {
@@ -225,15 +222,15 @@ public class HomepagePanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, languageApp.getValue("complete_set_new_dic"));
             return true;
         }
-        
+
         return false;
     }
-    
-    public void setLanguageApp(LanguageAppEnum languageApp){
+
+    public void setLanguageApp(LanguageAppEnum languageApp) {
         this.languageApp = languageApp;
     }
-    
-    public void setNormalAllLabel(){
+
+    public void setNormalAllLabel() {
         btWords[indexOfCurBtWord].setForeground(normalColor);
     }
 }

@@ -67,17 +67,22 @@ public class FindPanel extends javax.swing.JFrame {
             }
         }
     }
-    private void initTfSearchEvents(){
+     private void initTfSearchEvents(){
         tfSearch.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    if (tfSearch.getText().isEmpty()){
+                        JOptionPane.showMessageDialog(null, "Please fill the word you want to find");
+                    }
                     highlight();
                 }
             }
             
         });
     }
+
+
 
     
 

@@ -369,6 +369,12 @@ public class PanelCenter extends javax.swing.JPanel {
         btFind.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+
+                Component tmpComponent = scpCenterCenter.getViewport().getView();
+                if (!(tmpComponent instanceof JEditorPane)) {
+                    JOptionPane.showMessageDialog(null, "This is nothing to find");
+                    return;
+                }
                 new FindPanel((JTextComponent) scpCenterCenter.getViewport().getView()).setVisible(true);
             }
         });
