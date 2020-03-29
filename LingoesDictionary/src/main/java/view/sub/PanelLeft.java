@@ -139,7 +139,7 @@ public class PanelLeft extends javax.swing.JPanel {
     }
     
     public void setNewLanguageApp(){
-        LanguageAppEnum choosenLanguageApp = (LanguageAppEnum) JOptionPane.showInputDialog(this, 
+        LanguageAppEnum choosenLanguageApp = (LanguageAppEnum) JOptionPane.showInputDialog(null, 
                                             languageApp.getValue("set_dic_kind_mess"), 
                                             languageApp.getValue("set_dic_kind_title"), 
                                             JOptionPane.PLAIN_MESSAGE, 
@@ -151,7 +151,7 @@ public class PanelLeft extends javax.swing.JPanel {
         }
         
         if(choosenLanguageApp == languageApp){
-            JOptionPane.showMessageDialog(this, languageApp.getValue("already_set_new_language"));
+            JOptionPane.showMessageDialog(null, languageApp.getValue("already_set_new_language"));
             setNewLanguageApp();
         } else {
             this.languageApp = choosenLanguageApp;
@@ -160,7 +160,7 @@ public class PanelLeft extends javax.swing.JPanel {
             homepagePanel.setLanguageApp(languageApp);
             PanelCenter panelCenter = (PanelCenter) splitPane.getRightComponent();
             panelCenter.setLanguageApp(languageApp);
-            JOptionPane.showMessageDialog(this, languageApp.getValue("complete_set_new_language"));
+            JOptionPane.showMessageDialog(null, languageApp.getValue("complete_set_new_language"));
         }
     }
     /**

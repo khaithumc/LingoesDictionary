@@ -20,11 +20,14 @@ public class StartPagePanel extends javax.swing.JPanel {
     private final String detailText = "<p  style=\"font-size:14px;font-family:tahoma\">Version hiện tại: <b>" + curVersion + "</b></p>"
                                         + "<p  style=\"font-size:14px;font-family:tahoma\">Các tính năng hỗ trợ:</p>"
                                         + "<ul  style=\"font-size:14px;font-family:tahoma\">"
-                                        + "<li>Dịch</li>"
+                                        + "<li>Dịch với từ điển Anh - Việt</li>"
+                                        + "<li>Dịch với từ điển đa ngôn ngữ</li>"
                                         + "<li>Bảng động từ bất quy tắc</li>"
                                         + "<li>Các từ viết tắt thông dụng</li>"
+                                        + "<li>Hỗ trợ dịch online</li>"
                                         + "<li>Tìm từ trong đoạn</li>"
-                                        + "<li>Đọc từ</li></ul>";
+                                        + "<li>Lưu từ dưới dạng file html</li>"
+                                        + "<li>Phát âm từ</li></ul>";
     
     /**
      * Creates new form StartPagePanel

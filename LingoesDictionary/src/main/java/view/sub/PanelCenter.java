@@ -59,6 +59,9 @@ public class PanelCenter extends javax.swing.JPanel {
     final Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
     private LanguageAppEnum languageApp;
     private DictionaryEnum dicEnum;
+    private boolean isActived = false;
+    private int remainingInputKeyNumber = 3;
+    private String password = "dungcohoikhongnoidau";
     private String wordEditorPaneName = "Word_EditorPane";
 
     public PanelCenter(DictionaryEnum dicEnum, LanguageAppEnum languageApp) {
@@ -110,6 +113,7 @@ public class PanelCenter extends javax.swing.JPanel {
         initBtSaveEvents();
         initBtFindEvents();
         initBtCopyEvents();
+        initBtPrintEvents();
     }
 
     private void initBtTranslateEvents() {
@@ -199,9 +203,13 @@ public class PanelCenter extends javax.swing.JPanel {
         Map<String, Word> searchedWords = searchWordInAllDictionary(vocabulary);
         switch (dicEnum){
             case EN_NATIONS:
-                htmlText.append("<u style=\"color:red;font-size:22px;font-family:tahoma\"> TỪ: ").append(vocabulary.toUpperCase()).append("</u>");
+                htmlText.append("<u style=\"color:red;font-size:22px;font-family:tahoma\">")
+                        .append(languageApp.getValue("word"))
+                        .append(": ")
+                        .append(vocabulary.toUpperCase())
+                        .append("</u>");
                 searchedWords.keySet().forEach(dictionaryName -> {
-                    String htmlTitle = "<p style=\"font-size:16px;font-family:tahoma\">" + "Dịch theo tiếng: " + dictionaryName + "</p>";
+                    String htmlTitle = "<p style=\"font-size:16px;font-family:tahoma;color:orange\">@" + languageApp.getValue("translate_with_nation")+ ": " + dictionaryName + "</p>";
                     htmlText.append(htmlTitle);
                     if (searchedWords.get(dictionaryName) != null) {
                         htmlText.append(searchedWords.get(dictionaryName).toHTMLString());
@@ -252,7 +260,6 @@ public class PanelCenter extends javax.swing.JPanel {
         }
 
         scpCenterCenter.setViewportView(ep);
-
     }
 
     private void initBtStartPageEvents() {
@@ -420,7 +427,7 @@ public class PanelCenter extends javax.swing.JPanel {
                 fileChooser.setFileFilter(extensionFilter);
                 fileChooser.setSelectedFile(new File(curWord + extendsionSeparator + typeOfSaveFile));
 
-                String pathToSave = "";
+                String pathToSave;
                 int selection = fileChooser.showSaveDialog(null);
 
                 if (selection == JFileChooser.APPROVE_OPTION) {
@@ -465,5 +472,31 @@ public class PanelCenter extends javax.swing.JPanel {
     
     private boolean isShowingWord(){
         return wordEditorPaneName.equals(scpCenterCenter.getViewport().getView().getName());
+    }
+
+    private void initBtPrintEvents() {
+        btPrint.addActionListener(((arg0) -> {
+            if(remainingInputKeyNumber == 0){
+                JOptionPane.showMessageDialog(null, languageApp.getValue("cant_try_mess"));
+                return;
+            }
+            if(isActived){
+               JOptionPane.showMessageDialog(null, languageApp.getValue("wait_new_version_mess"));
+            } else {
+                String input = JOptionPane.showInputDialog(languageApp.getValue("remaining_input_mess") + ": " + remainingInputKeyNumber + "\n" + languageApp.getValue("input_key_mess"));
+                if(input == null){
+                    return;
+                }
+                
+                if(input.equals(password)){
+                    isActived = true;
+                    JOptionPane.showMessageDialog(null, languageApp.getValue("thank_you_mess"));
+                } else {
+                    remainingInputKeyNumber--;
+                    JOptionPane.showMessageDialog(null, languageApp.getValue("wrong_key_mess"));
+                    btPrint.doClick();
+                }
+            }
+        }));
     }
 }
