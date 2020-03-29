@@ -10,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
@@ -18,11 +19,13 @@ import javax.swing.text.JTextComponent;
  *
  * @author VO DINH DUNG
  */
-public class FindPanel extends javax.swing.JFrame {
+public class FindPanel extends javax.swing.JFrame{
     private JTextComponent textComp;
     private String pattern;
+    Highlighter.HighlightPainter myHighlightPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
     /**
      * Creates new form FindButton
+     * @param textComp
      */
     public FindPanel(JTextComponent textComp) {
         this.textComp = textComp;
@@ -31,60 +34,37 @@ public class FindPanel extends javax.swing.JFrame {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
-    class MyHightlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
-
-        public MyHightlightPainter(Color color) {
-            super(color);
-        }
-
-    }
-    Highlighter.HighlightPainter myHighlightPainter = new MyHightlightPainter(Color.yellow);
-
     public void highlight() {
         pattern = tfSearch.getText();
-        removeHighlights();
+        if(pattern.length() == 0){
+            return;
+        }
+        
         try {
-            Highlighter hilite = textComp.getHighlighter();
+            Highlighter highlighter = textComp.getHighlighter();
             Document doc = textComp.getDocument();
             String text = doc.getText(0, doc.getLength());
+            
             int pos = 0;
-            while ((pos = text.toUpperCase().indexOf(pattern.toUpperCase(), pos)) >= 0) {
-                hilite.addHighlight(pos, pos + pattern.length(), myHighlightPainter);
+            while ((pos = text.toUpperCase().indexOf(pattern.toUpperCase(), pos)) >= 0) {            
+                highlighter.addHighlight(pos, pos + pattern.length(), myHighlightPainter);
                 pos += pattern.length();
-
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        } catch (BadLocationException e) {
         }
     }
-
-    public void removeHighlights() {
-        Highlighter hilite = textComp.getHighlighter();
-        Highlighter.Highlight[] hilites = hilite.getHighlights();
-        for (int i = 0; i < hilites.length; i++) {
-            if (hilites[i].getPainter() instanceof MyHightlightPainter) {
-                hilite.removeHighlight(hilites[i]);
-            }
-        }
-    }
-     private void initTfSearchEvents(){
+    
+    private void initTfSearchEvents(){
         tfSearch.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    if (tfSearch.getText().isEmpty()){
-                        JOptionPane.showMessageDialog(null, "Please fill the word you want to find");
-                    }
-                    highlight();
-                }
+                // loại bỏ tất cả các highlight cũ
+                textComp.getHighlighter().removeAllHighlights();
+                highlight();
             }
-            
         });
     }
-
-
-
-    
 
     /**
      * This method is called from within the constructor to initialize the form.

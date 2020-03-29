@@ -11,6 +11,7 @@ view\sub\SettingPanel$1.class
 view\MainForm$2.class
 view\sub\PanelCenter$3.class
 test\VoiceTest.class
+view\sub\PanelCenter$5$1.class
 view\sub\AddendumPanel$1.class
 view\sub\PanelCenter$6.class
 view\sub\PanelCenter$1.class
@@ -41,7 +42,6 @@ view\MainForm$3.class
 common\DictionaryEnum.class
 view\sub\FindPanel$1.class
 view\sub\PanelCenter$2.class
-view\sub\FindPanel$MyHightlightPainter.class
 test\TestBtSave.class
 view\sub\TranslatorPanel.class
 entities\OnlyEVWord.class

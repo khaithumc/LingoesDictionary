@@ -65,7 +65,7 @@ public class MainForm extends javax.swing.JFrame {
             new MatteBorder(0, 5, 0, 5, new Color(201, 208, 240)), new MatteBorder(1, 1, 0, 1, Color.GRAY));
 
     public MainForm(){
-        this(DictionaryEnum.EN_NATIONS, LanguageAppEnum.RUSSIAN);
+        this(DictionaryEnum.EN_NATIONS, LanguageAppEnum.ENGLISH);
     }
     public MainForm(DictionaryEnum dicEnum, LanguageAppEnum languageApp) {
         this.dicEnum = dicEnum;

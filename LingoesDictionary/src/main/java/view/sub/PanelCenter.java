@@ -18,6 +18,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -57,6 +59,7 @@ public class PanelCenter extends javax.swing.JPanel {
     final Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
     private LanguageAppEnum languageApp;
     private DictionaryEnum dicEnum;
+    private String wordEditorPaneName = "Word_EditorPane";
 
     public PanelCenter(DictionaryEnum dicEnum, LanguageAppEnum languageApp) {
         this.dicEnum = dicEnum;
@@ -116,6 +119,8 @@ public class PanelCenter extends javax.swing.JPanel {
                 TranslatorPanel translatorPanel = new TranslatorPanel(dicEnum);
                 scpCenterCenter.setViewportView(translatorPanel);
                 scpCenterCenter.revalidate();
+                // đưa curWord về null vì pnCenter không hiển thị từ
+                curWord = null;
             }
         });
     }
@@ -124,11 +129,20 @@ public class PanelCenter extends javax.swing.JPanel {
         btCopy.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                String selection = curWord;
-                StringSelection data = new StringSelection(selection);
-                clip.setContents(data, data);
+                Component showingComponent = scpCenterCenter.getViewport().getView();
+                if(isShowingWord()){
+                    JEditorPane tmpEditorPane = (JEditorPane) showingComponent;
+                    String selection = tmpEditorPane.getSelectedText();
+                    if(selection == null){
+                        selection = curWord;
+                    }
+                    
+                    StringSelection data = new StringSelection(selection);
+                    clip.setContents(data, data);
+                } else {
+                    JOptionPane.showMessageDialog(null, languageApp.getValue("cant_copy"));
+                }
             }
-
         });
     }
 
@@ -177,7 +191,7 @@ public class PanelCenter extends javax.swing.JPanel {
         curWord = vocabulary;
 
         JEditorPane epWordView = new JEditorPane();
-        epWordView.setName("Word_EditorPane");
+        epWordView.setName(wordEditorPaneName);
         epWordView.setContentType("text/html");
         epWordView.setEditable(false);
         
@@ -246,6 +260,8 @@ public class PanelCenter extends javax.swing.JPanel {
             StartPagePanel pnStartPage = new StartPagePanel();
             scpCenterCenter.setViewportView(pnStartPage);
             scpCenterCenter.revalidate();
+            // đưa curWord về null vì pnCenter không hiển thị từ
+            curWord = null;
         });
     }
 
@@ -369,13 +385,20 @@ public class PanelCenter extends javax.swing.JPanel {
         btFind.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-
-                Component tmpComponent = scpCenterCenter.getViewport().getView();
-                if (!(tmpComponent instanceof JEditorPane)) {
-                    JOptionPane.showMessageDialog(null, "This is nothing to find");
-                    return;
+                if (isShowingWord()) {
+                    FindPanel findPanel = new FindPanel((JTextComponent) scpCenterCenter.getViewport().getView());
+                    findPanel.setVisible(true);
+                    // loại bỏ tất cả highlight khi tắt findPanel
+                    findPanel.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosed(WindowEvent e) {
+                            JEditorPane curEpWord = (JEditorPane) scpCenterCenter.getViewport().getView();
+                            curEpWord.getHighlighter().removeAllHighlights();
+                        }
+                    });
+                } else {
+                    JOptionPane.showMessageDialog(null, languageApp.getValue("cant_find"));
                 }
-                new FindPanel((JTextComponent) scpCenterCenter.getViewport().getView()).setVisible(true);
             }
         });
     }
@@ -384,12 +407,9 @@ public class PanelCenter extends javax.swing.JPanel {
         btSave.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-
-                Component tmpComponent = scpCenterCenter.getViewport().getView();
-
                 // if the showing is not a word -> show a dialog to announce and return
-                if (!(tmpComponent instanceof JEditorPane)) {
-                    JOptionPane.showMessageDialog(null, "This is not a word to save");
+                if (!isShowingWord()) {
+                    JOptionPane.showMessageDialog(null, languageApp.getValue("cant_save"));
                     return;
                 }
 
@@ -416,7 +436,7 @@ public class PanelCenter extends javax.swing.JPanel {
                             FileWriter fileWriter = new FileWriter(saveFile);
                             fileWriter.write(HTMLCodeUtils.convertToHTMLCodes(curWordToHTML));
                             fileWriter.close();
-                            JOptionPane.showMessageDialog(null, "Word was saved");
+                            JOptionPane.showMessageDialog(null, languageApp.getValue("saved_word"));
                     } catch (IOException ex) {
                     }
                 }
@@ -441,5 +461,9 @@ public class PanelCenter extends javax.swing.JPanel {
     
     public void setDicEnum(DictionaryEnum dicEnum){
         this.dicEnum = dicEnum;
+    }
+    
+    private boolean isShowingWord(){
+        return wordEditorPaneName.equals(scpCenterCenter.getViewport().getView().getName());
     }
 }
