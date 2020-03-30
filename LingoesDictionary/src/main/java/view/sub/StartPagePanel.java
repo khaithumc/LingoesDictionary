@@ -16,7 +16,7 @@ import utils.SizeUtils;
  */
 public class StartPagePanel extends javax.swing.JPanel {
     private final String curVersion = "1.0";
-    private final String iconLingoesPath = getClass().getResource("/pictures/icon-lingoes-larger.jpg").getPath();
+    private final String iconLingoesPath = getClass().getResource("/pictures/new_lingoes_icon1.png").getPath();
     private final String detailText = "<p  style=\"font-size:14px;font-family:tahoma\">Version hiện tại: <b>" + curVersion + "</b></p>"
                                         + "<p  style=\"font-size:14px;font-family:tahoma\">Các tính năng hỗ trợ:</p>"
                                         + "<ul  style=\"font-size:14px;font-family:tahoma\">"
@@ -57,9 +57,9 @@ public class StartPagePanel extends javax.swing.JPanel {
         lbWelcome.setForeground(new java.awt.Color(204, 51, 0));
         lbWelcome.setText("WELCOME TO LINGOES");
 
-        scpDetail.setBorder(null);
+        scpDetail.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        epDetail.setBorder(null);
+        epDetail.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         scpDetail.setViewportView(epDetail);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

@@ -120,7 +120,7 @@ public class PanelCenter extends javax.swing.JPanel {
         btTranslate.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                TranslatorPanel translatorPanel = new TranslatorPanel(dicEnum);
+                TranslatorPanel translatorPanel = new TranslatorPanel(languageApp);
                 scpCenterCenter.setViewportView(translatorPanel);
                 scpCenterCenter.revalidate();
                 // đưa curWord về null vì pnCenter không hiển thị từ
@@ -176,11 +176,14 @@ public class PanelCenter extends javax.swing.JPanel {
         btSpeaker.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-
-                if (epSelected.getSelectedText() == null) {
-                    VoiceUtils.ConvertTextToSpeech(voiceWord);
+                if(isShowingWord()){
+                    if (epSelected.getSelectedText() == null) {
+                        VoiceUtils.ConvertTextToSpeech(voiceWord);
+                    } else {
+                        VoiceUtils.ConvertTextToSpeech(epSelected.getSelectedText());
+                    }
                 } else {
-                    VoiceUtils.ConvertTextToSpeech(epSelected.getSelectedText());
+                    JOptionPane.showMessageDialog(null, languageApp.getValue("cant_speech"));
                 }
             }
         });

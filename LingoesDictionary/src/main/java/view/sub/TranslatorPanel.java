@@ -6,11 +6,13 @@
 package view.sub;
 
 import common.DictionaryEnum;
+import common.LanguageAppEnum;
 import common.LanguageEnum;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,38 +27,26 @@ import utils.TranslatorUtils;
  * @author USER
  */
 public class TranslatorPanel extends javax.swing.JPanel {
-//    private PanelCenter panelCenter;
-    private DictionaryEnum dicEnum;
     private Map<String, String> mapLanguage;
     private final LanguageEnum[] languages = LanguageEnum.values();
     private ComboBoxModel<String> languageModelFrom;
     private ComboBoxModel<String> languageModelTo;
+    private LanguageAppEnum languageApp;
 
-    public TranslatorPanel(DictionaryEnum dicEnum) {
-        this.dicEnum = dicEnum;
+    public TranslatorPanel(LanguageAppEnum languageApp) {
+        this.languageApp = languageApp;
         initComponents();
         initComponentManuallys();
         initEvents();
-        initTextAreaData();
     }
 
     private void initComponentManuallys() {
         initComboboxData();
-
+        btEnter.setText(languageApp.getValue("translate_text"));
     }
-
-    private void initTextAreaData() {
-//        panelCenter = new PanelCenter(dicEnum);
-        String s = taFrom.getText();
-        System.out.println(taFrom.getText());
-        System.out.println(s);
-    }
-
     private void initComboboxData() {
         List<String> listLanguages = new ArrayList<>();
-        for (int i = 0; i < languages.length; i++) {
-            listLanguages.add(languages[i].toString());
-        }
+        Arrays.stream(languages).forEach(language -> listLanguages.add(language.toString()));
 
         String[] arrayLanguages = listLanguages.toArray(new String[listLanguages.size()]);
 
@@ -87,14 +77,12 @@ public class TranslatorPanel extends javax.swing.JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 try {
-                    taTo.setText(TranslatorUtils.translate(mapLanguage.get(languageModelFrom.getSelectedItem().toString()),
-                            mapLanguage.get(languageModelTo.getSelectedItem().toString()), taFrom.getText()));
+                    taOutput.setText(TranslatorUtils.translate(mapLanguage.get(languageModelFrom.getSelectedItem().toString()),
+                            mapLanguage.get(languageModelTo.getSelectedItem().toString()), taInput.getText()));
                 } catch (IOException ex) {
                     Logger.getLogger(TranslatorPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.out.println(taTo.getText());
             }
-
         });
     }
 
@@ -113,8 +101,8 @@ public class TranslatorPanel extends javax.swing.JPanel {
 
     private Map<String, String> mockMapData() {
         Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < languages.length; i++) {
-            map.put(languages[i].toString(), languages[i].getValue());
+        for (LanguageEnum language : languages) {
+            map.put(language.toString(), language.getValue());
         }
 
         return map;
@@ -133,10 +121,10 @@ public class TranslatorPanel extends javax.swing.JPanel {
         cbTo = new javax.swing.JComboBox<>();
         btSwap = new javax.swing.JButton();
         btEnter = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        taTo = new javax.swing.JTextArea();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        taFrom = new javax.swing.JTextArea();
+        scpOutput = new javax.swing.JScrollPane();
+        taOutput = new javax.swing.JTextArea();
+        scpInput = new javax.swing.JScrollPane();
+        taInput = new javax.swing.JTextArea();
 
         setBackground(new java.awt.Color(249, 226, 253));
 
@@ -156,24 +144,23 @@ public class TranslatorPanel extends javax.swing.JPanel {
         btSwap.setFocusPainted(false);
 
         btEnter.setBackground(new java.awt.Color(204, 204, 255));
-        btEnter.setText("Dịch");
+        btEnter.setText("Translate");
         btEnter.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
         btEnter.setFocusPainted(false);
 
-        taTo.setEditable(false);
-        taTo.setColumns(20);
-        taTo.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        taTo.setRows(5);
-        taTo.setText("Bản dịch");
-        taTo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
-        jScrollPane3.setViewportView(taTo);
+        taOutput.setEditable(false);
+        taOutput.setColumns(20);
+        taOutput.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        taOutput.setRows(5);
+        taOutput.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
+        scpOutput.setViewportView(taOutput);
 
-        taFrom.setColumns(20);
-        taFrom.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        taFrom.setRows(5);
-        taFrom.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
-        taFrom.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jScrollPane4.setViewportView(taFrom);
+        taInput.setColumns(20);
+        taInput.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        taInput.setRows(5);
+        taInput.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
+        taInput.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        scpInput.setViewportView(taInput);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -191,15 +178,15 @@ public class TranslatorPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btEnter, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 84, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(scpOutput)
+                    .addComponent(scpInput, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scpInput, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -207,7 +194,7 @@ public class TranslatorPanel extends javax.swing.JPanel {
                     .addComponent(btSwap)
                     .addComponent(btEnter))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scpOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(54, Short.MAX_VALUE))
         );
 
@@ -221,9 +208,9 @@ public class TranslatorPanel extends javax.swing.JPanel {
     private javax.swing.JButton btSwap;
     private javax.swing.JComboBox<String> cbFrom;
     private javax.swing.JComboBox<String> cbTo;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextArea taFrom;
-    private javax.swing.JTextArea taTo;
+    private javax.swing.JScrollPane scpInput;
+    private javax.swing.JScrollPane scpOutput;
+    private javax.swing.JTextArea taInput;
+    private javax.swing.JTextArea taOutput;
     // End of variables declaration//GEN-END:variables
 }

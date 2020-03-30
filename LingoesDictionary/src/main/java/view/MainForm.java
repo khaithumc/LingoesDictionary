@@ -48,7 +48,7 @@ public class MainForm extends javax.swing.JFrame {
     private DictionaryEnum dicEnum;
     private int indexOfCurWord;
     private final Container container = getContentPane();
-    private final String ICON_PATH = getClass().getResource("/pictures/icon-lingoes-16px.jpg").getPath();
+    private final String ICON_PATH = getClass().getResource("/pictures/tmp.png").getPath();
     private final BiPredicate<String, String> searchWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.startsWith(s2);
     private final BiPredicate<String, String> searchFullWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.equalsIgnoreCase(s2);
     private final Font normalWordFont = new Font("Tahoma", Font.PLAIN, 16);
