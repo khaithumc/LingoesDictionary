@@ -48,7 +48,7 @@ public class MainForm extends javax.swing.JFrame {
     private DictionaryEnum dicEnum;
     private int indexOfCurWord;
     private final Container container = getContentPane();
-    private final String ICON_PATH = getClass().getResource("/pictures/tmp.png").getPath();
+    private final String ICON_PATH = getClass().getResource("/pictures/app_icon.png").getPath();
     private final BiPredicate<String, String> searchWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.startsWith(s2);
     private final BiPredicate<String, String> searchFullWordFunc = (BiPredicate<String, String>) (s1, s2) -> s1.equalsIgnoreCase(s2);
     private final Font normalWordFont = new Font("Tahoma", Font.PLAIN, 16);
@@ -65,7 +65,7 @@ public class MainForm extends javax.swing.JFrame {
             new MatteBorder(0, 5, 0, 5, new Color(201, 208, 240)), new MatteBorder(1, 1, 0, 1, Color.GRAY));
 
     public MainForm(){
-        this(DictionaryEnum.EN_NATIONS, LanguageAppEnum.ENGLISH);
+        this(DictionaryEnum.ONLY_EN_VI, LanguageAppEnum.VIETNAMESE);
     }
     public MainForm(DictionaryEnum dicEnum, LanguageAppEnum languageApp) {
         this.dicEnum = dicEnum;
@@ -434,7 +434,12 @@ public class MainForm extends javax.swing.JFrame {
             public void mousePressed(MouseEvent e) {
                 pnLeft.activeBtHomepage();
                 String typingText = tfSearch.getText();
-                cbbModel.addElement(new WordAndIndex(typingText, pnLeft.searchWord(typingText, searchFullWordFunc)));
+                WordAndIndex wai = new WordAndIndex(typingText, -1);
+                int indexOfTypingText = cbbModel.getIndexOf(wai);
+                if (indexOfTypingText == -1) {
+                    wai.setIndex(pnLeft.searchWord(typingText, searchFullWordFunc));
+                    cbbModel.addElement(wai);
+                }
                 tfSearch.setText(typingText);
                 indexOfCurWord = cbbModel.getSize() - 1;
             }
